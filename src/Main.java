@@ -1,0 +1,520 @@
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+
+import static java.lang.Math.*;
+
+public class Main {
+    private static final double M_PI = 3.1415926535;
+    private static final int X_SIZE = 600;
+    private static final int Y_SIZE = 600;
+    private static Point[][] field = new Point[Y_SIZE][X_SIZE]; //1 полусфера
+    private static ArrayList<Line> lines = new ArrayList<>();
+
+    public static double sqrt(double value) {
+        if(value < 0)
+            return 0;
+        else
+            return Math.sqrt(value);
+    }
+
+    public Main() {
+        for(int x = 0; x < X_SIZE; x++) {
+            for(int y = 0; y < X_SIZE; y++) {
+                field[x][y] = new Point(x, y);
+            }
+        }
+    }
+    public static void makeFractal(String fractalName, double x0, double y0, double z0, double w0, double R0, double x1, double y1, double z1, double w1, double R1) {
+        for(int x = 0; x < X_SIZE; x++) {
+            for(int y = 0; y < X_SIZE; y++) {
+                field[y][x] = new Point(x, y);
+            }
+        }
+        int iter = 0;
+        double b, csqr, a, Cw, C, w, zz;
+        double RforNova = 0, R0forNova = 0, R1forNova = 0;
+        double d = sqrt((x1-x0)*(x1-x0) + (y1-y0)*(y1-y0) + (z1-z0)*(z1-z0) + (w1-w0)*(w1-w0)+(R1forNova-R0forNova)*(R1forNova-R0forNova));
+        double X = (d*d + R0*R0 - R1*R1)/ (2.f*d);
+        double r = sqrt(R0*R0-X*X);
+        double yemax = (double)Y_SIZE / 100 - 3;
+        double xemax = (double)X_SIZE / 100 - 3;
+        for(double ye = -3; ye < yemax; ye += 0.01) {
+            for(double xe = -3; xe < xemax; xe += 0.01) {
+                double Fi = 2 * M_PI * xe / 5.f;
+                double teta = M_PI * ye / 5.f;
+                double x = -r * cos(teta) * cos(Fi); // как учесть смещение центров гиперсфер?
+                double y = r * cos(teta) * sin(Fi);
+                Complex c = new Complex(x, y);
+                if(z1!=z0) {
+                    double Cxyz = (R1 * R1 - R0 * R0 - (x - x1) * (x - x1) - (y - y1) * (y - y1) - (RforNova - R1forNova) * (RforNova - R1forNova) + (x - x0) * (x - x0) + (y - y0) * (y - y0) + (RforNova - R0forNova) * (RforNova - R0forNova)) / 2.f / (z0 - z1) + (z0 + z1)/2.f;
+                    double Czw = (w0 * w0 - w1 * w1) /( 2.f * (z0 - z1));
+                    Cw = (w1 - w0) / (z0 - z1);
+                    C = Cxyz + Czw;
+                    double Ckon = C - z0;
+                    b = 2 * Ckon * Cw - 2 * w0;
+                    a = (Cw * Cw + 1);
+                    csqr = R0 * R0 - (x - x0) * (x - x0) - (y - y0) * (y - y0) - Ckon * Ckon - w0 * w0 - (RforNova - R0forNova) * (RforNova - R0forNova);
+                    double a1 = b * b + 4 * a * csqr;
+                    if(ye >=0)
+                        w = (-b + sqrt(a1)) / 2.f / a; // полушарие со сложением дискриминанта
+                    else
+                        w = (-b - sqrt(a1)) / 2.f / a; // полушарие с вычитанием дискриминанта
+                    zz = C + w * Cw;
+                }
+                else {
+                    double Cxy = R1*R1 - R0*R0 - (x-x1)*(x-x1) - (y-y1)*(y-y1) + (x-x0)*(x-x0) + (y-y0)*(y-y0) - (RforNova - R1forNova) * (RforNova - R1forNova) + (RforNova - R0forNova) * (RforNova - R0forNova);
+                    w = (Cxy/(w0-w1)+w0+w1)/2;
+                    if(ye >= 0)
+                        zz = sqrt(R0*R0-(x-x0)*(x-x0) - (y-y0)*(y-y0) - (w-w0)*(w-w0) - (RforNova - R0forNova) * (RforNova - R0forNova))+z0;
+                    else
+                        zz = -sqrt(R0*R0-(x-x0)*(x-x0) - (y-y0)*(y-y0) - (w-w0)*(w-w0) - (RforNova - R0forNova) * (RforNova - R0forNova))+z0;
+                }
+                Complex z = new Complex(zz, w);
+
+                iter = 0;
+                if(fractalName.toLowerCase().equals("nova")){
+                    //заглушка
+                }
+                else if (fractalName.toLowerCase().equals("mandelbrot")){
+                    while (z.Length() < 4 && iter != 100) {
+                        z = z.Multi(z).Sum(c);
+                        iter++;
+                    }
+                }
+                int YE = (int) ((3+ye)*100);
+                int XE = (int) ((3+xe)*100);
+                if (iter == 100)
+                    field[YE][XE].SetRGB(0, 0, 0);
+                else if (iter % 17 == 3)
+                    field[YE][XE].SetRGB(230, 230, 250);
+
+                else if (iter % 17 == 2)
+                    field[YE][XE].SetRGB(255, 99, 71);
+
+                else if (iter % 17 == 1)
+                    field[YE][XE].SetRGB(195, 176, 145);
+
+                else if (iter % 17 == 0)
+                    field[YE][XE].SetRGB(255, 255, 255);
+
+                else if (iter % 17 == 16)
+                    field[YE][XE].SetRGB(100, 149, 237);
+
+                else if (iter % 17 == 15)
+                    field[YE][XE].SetRGB(154, 205, 50);
+
+                else if (iter % 17 == 14)
+                    field[YE][XE].SetRGB(245, 222, 179);
+
+                else if (iter % 17 == 13)
+                    field[YE][XE].SetRGB(211, 211, 211);
+
+                else if (iter % 17 == 12)
+                    field[YE][XE].SetRGB(135, 206, 250);
+
+                else if (iter % 17 == 11)
+                    field[YE][XE].SetRGB(46, 139, 87);
+
+                else if (iter % 17 == 10)
+                    field[YE][XE].SetRGB(255, 255, 255);
+
+                else if (iter % 17 == 9)
+                    field[YE][XE].SetRGB(48, 230, 200);
+
+                else if (iter % 17 == 8)
+                    field[YE][XE].SetRGB(255, 165, 0);
+
+                else if (iter % 17 == 7)
+                    field[YE][XE].SetRGB(128, 0, 128);
+
+                else if (iter % 17 == 6)
+                    field[YE][XE].SetRGB(231, 254, 255);
+
+                else if (iter % 17 == 5)
+                    field[YE][XE].SetRGB(255, 0, 0);
+
+                else if (iter % 17 == 4)
+                    field[YE][XE].SetRGB(173, 216, 230);
+                if (iter != 100)
+                    field[YE][XE].setzVertical(iter % 17);
+                else
+                    field[YE][XE].setzVertical(iter);
+            }
+        }
+    }
+
+    public static void setAmOfNearestPoints() {
+        for(int i = 0; i < Y_SIZE; i++) {
+            for(int j = 0; j < X_SIZE; j++) {
+                if(j == 0) { //левый столбец
+                    if(i == 0) { //верхняя ячейка
+                        if (field[i][j].getR() == field[i][j+1].getR() && field[i][j].getG() == field[i][j+1].getG() && field[i][j].getB() == field[i][j+1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j+1, i);
+                        }
+                        if (field[i][j].getR() == field[i+1][j].getR() && field[i][j].getG() == field[i+1][j].getG() && field[i][j].getB() == field[i+1][j].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j, i+1);
+                        }
+                        if (field[i][j].getR() == field[i+1][j+1].getR() && field[i][j].getG() == field[i+1][j+1].getG() && field[i][j].getB() == field[i+1][j+1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j+1, i+1);
+                        }
+                    }
+                    else if (i == Y_SIZE-1) { //нижняя ячейка
+                        if (field[i][j].getR() == field[i][j+1].getR() && field[i][j].getG() == field[i][j+1].getG() && field[i][j].getB() == field[i][j+1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j+1, i);
+                        }
+                        if (field[i][j].getR() == field[i-1][j].getR() && field[i][j].getG() == field[i-1][j].getG() && field[i][j].getB() == field[i-1][j].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j, i-1);
+                        }
+                        if (field[i][j].getR() == field[i-1][j+1].getR() && field[i][j].getG() == field[i-1][j+1].getG() && field[i][j].getB() == field[i-1][j+1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j+1, i-1);
+                        }
+                    }
+                    else { //остальные ячейки
+                        if (field[i][j].getR() == field[i][j+1].getR() && field[i][j].getG() == field[i][j+1].getG() && field[i][j].getB() == field[i][j+1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j, i+1);
+                        }
+                        if (field[i][j].getR() == field[i-1][j].getR() && field[i][j].getG() == field[i-1][j].getG() && field[i][j].getB() == field[i-1][j].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j, i-1);
+                        }
+                        if (field[i][j].getR() == field[i-1][j+1].getR() && field[i][j].getG() == field[i-1][j+1].getG() && field[i][j].getB() == field[i-1][j+1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j+1, i-1);
+                        }
+                        if (field[i][j].getR() == field[i+1][j].getR() && field[i][j].getG() == field[i+1][j].getG() && field[i][j].getB() == field[i+1][j].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j, i+1);
+                        }
+                        if (field[i][j].getR() == field[i+1][j+1].getR() && field[i][j].getG() == field[i+1][j+1].getG() && field[i][j].getB() == field[i+1][j+1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j+1, i+1);
+                        }
+                    }
+                }
+                else if(j == X_SIZE-1) { //правый столбец
+                    if(i == 0) { //верхняя ячейка
+                        if (field[i][j].getR() == field[i][j-1].getR() && field[i][j].getG() == field[i][j-1].getG() && field[i][j].getB() == field[i][j-1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j-1, i);
+                        }
+                        if (field[i][j].getR() == field[i+1][j].getR() && field[i][j].getG() == field[i+1][j].getG() && field[i][j].getB() == field[i+1][j].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j, i+1);
+                        }
+                        if (field[i][j].getR() == field[i+1][j-1].getR() && field[i][j].getG() == field[i+1][j-1].getG() && field[i][j].getB() == field[i+1][j-1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j-1, i+1);
+                        }
+                    }
+                    else if (i == Y_SIZE-1) { //нижняя ячейка
+                        if (field[i][j].getR() == field[i][j-1].getR() && field[i][j].getG() == field[i][j-1].getG() && field[i][j].getB() == field[i][j-1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j-1, i);
+                        }
+                        if (field[i][j].getR() == field[i-1][j].getR() && field[i][j].getG() == field[i-1][j].getG() && field[i][j].getB() == field[i-1][j].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j, i-1);
+                        }
+                        if (field[i][j].getR() == field[i-1][j-1].getR() && field[i][j].getG() == field[i-1][j-1].getG() && field[i][j].getB() == field[i-1][j-1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j-1, i-1);
+                        }
+                    }
+                    else { //остальные ячейки
+                        if (field[i][j].getR() == field[i][j-1].getR() && field[i][j].getG() == field[i][j-1].getG() && field[i][j].getB() == field[i][j-1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j-1, i);
+                        }
+                        if (field[i][j].getR() == field[i-1][j].getR() && field[i][j].getG() == field[i-1][j].getG() && field[i][j].getB() == field[i-1][j].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j, i-1);
+                        }
+                        if (field[i][j].getR() == field[i-1][j-1].getR() && field[i][j].getG() == field[i-1][j-1].getG() && field[i][j].getB() == field[i-1][j-1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j-1, i-1);
+                        }
+                        if (field[i][j].getR() == field[i+1][j].getR() && field[i][j].getG() == field[i+1][j].getG() && field[i][j].getB() == field[i+1][j].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j, i+1);
+                        }
+                        if (field[i][j].getR() == field[i+1][j-1].getR() && field[i][j].getG() == field[i+1][j-1].getG() && field[i][j].getB() == field[i+1][j-1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j-1, i+1);
+                        }
+                    }
+                }
+                else { //любой столбец
+                    if(i == 0) { //верхняя ячейка
+                        if (field[i][j].getR() == field[i][j+1].getR() && field[i][j].getG() == field[i][j+1].getG() && field[i][j].getB() == field[i][j+1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j+1, i);
+                        }
+                        if (field[i][j].getR() == field[i+1][j].getR() && field[i][j].getG() == field[i+1][j].getG() && field[i][j].getB() == field[i+1][j].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j, i+1);
+                        }
+                        if (field[i][j].getR() == field[i+1][j+1].getR() && field[i][j].getG() == field[i+1][j+1].getG() && field[i][j].getB() == field[i+1][j+1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j+1, i+1);
+                        }
+                        if (field[i][j].getR() == field[i+1][j-1].getR() && field[i][j].getG() == field[i+1][j-1].getG() && field[i][j].getB() == field[i+1][j-1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j-1, i+1);
+                        }
+                        if (field[i][j].getR() == field[i][j-1].getR() && field[i][j].getG() == field[i][j-1].getG() && field[i][j].getB() == field[i][j-1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j-1, i);
+                        }
+                    }
+                    else if (i == Y_SIZE-1) { //нижняя ячейка
+                        if (field[i][j].getR() == field[i][j+1].getR() && field[i][j].getG() == field[i][j+1].getG() && field[i][j].getB() == field[i][j+1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j+1, i);
+                        }
+                        if (field[i][j].getR() == field[i-1][j].getR() && field[i][j].getG() == field[i-1][j].getG() && field[i][j].getB() == field[i-1][j].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j, i-1);
+                        }
+                        if (field[i][j].getR() == field[i-1][j+1].getR() && field[i][j].getG() == field[i-1][j+1].getG() && field[i][j].getB() == field[i-1][j+1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j+1, i-1);
+                        }
+                        if (field[i][j].getR() == field[i-1][j-1].getR() && field[i][j].getG() == field[i-1][j-1].getG() && field[i][j].getB() == field[i-1][j-1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j-1, i-1);
+                        }
+                        if (field[i][j].getR() == field[i][j-1].getR() && field[i][j].getG() == field[i][j-1].getG() && field[i][j].getB() == field[i][j-1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j-1, i);
+                        }
+                    }
+                    else { //остальные ячейки
+                        if (field[i][j].getR() == field[i][j+1].getR() && field[i][j].getG() == field[i][j+1].getG() && field[i][j].getB() == field[i][j+1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j+1, i);
+                        }
+                        if (field[i][j].getR() == field[i-1][j].getR() && field[i][j].getG() == field[i-1][j].getG() && field[i][j].getB() == field[i-1][j].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j, i-1);
+                        }
+                        if (field[i][j].getR() == field[i-1][j+1].getR() && field[i][j].getG() == field[i-1][j+1].getG() && field[i][j].getB() == field[i-1][j+1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j+1, i-1);
+                        }
+                        if (field[i][j].getR() == field[i+1][j].getR() && field[i][j].getG() == field[i+1][j].getG() && field[i][j].getB() == field[i+1][j].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j, i+1);
+                        }
+                        if (field[i][j].getR() == field[i+1][j+1].getR() && field[i][j].getG() == field[i+1][j+1].getG() && field[i][j].getB() == field[i+1][j+1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j+1, i+1);
+                        }
+                        if (field[i][j].getR() == field[i+1][j-1].getR() && field[i][j].getG() == field[i+1][j-1].getG() && field[i][j].getB() == field[i+1][j-1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j-1, i+1);
+                        }
+                        if (field[i][j].getR() == field[i-1][j-1].getR() && field[i][j].getG() == field[i-1][j-1].getG() && field[i][j].getB() == field[i-1][j-1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j-1, i-1);
+                        }
+                        if (field[i][j].getR() == field[i][j-1].getR() && field[i][j].getG() == field[i][j-1].getG() && field[i][j].getB() == field[i][j-1].getB()) {
+                            field[i][j].increaseNearAmount();
+                            field[i][j].addNearestPoint(j-1, i);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public static boolean linesAreExisted() {
+        for (int i = 0; i < Y_SIZE; i++) {
+            for (int j = 0; j < X_SIZE; j++) {
+                if (field[i][j].isActive())
+                    return true;
+            }
+        }
+        return true;
+    }
+
+    public static int[] getLessNearestAmPixel(int x, int y) {
+        int minAmount = 10, xmin = 0, ymin = 0;
+        ArrayList<int[]> nearestPointsCoordinates = field[y][x].getNearestPointsCoordinates();
+        for(int[] coords: nearestPointsCoordinates) {
+            int xe = coords[0];
+            int ye = coords[1];
+            if(field[ye][xe].getNearAmount() <= minAmount && field[ye][xe].isActive()) {
+                minAmount = field[ye][xe].getNearAmount();
+                xmin = coords[0];
+                ymin = coords[1];
+            }
+        }
+        return new int[] {xmin, ymin};
+    }
+
+//    public static boolean isNotOver(Point point, int start_x, int start_y) {
+//        if(point.)
+//    }
+    public static void buildLines() {
+        if(linesAreExisted()) {
+            Line line = new Line();
+            ArrayList<Vector> vectors = new ArrayList<>();
+            for (int y = 0; y < Y_SIZE; y++) {
+                for (int x = 0; x < X_SIZE; x++) {
+                    if(field[y][x].isActive()) {
+                        int prev_x_dif = 0, prev_y_dif = 0, x_dif=0, y_dif=0;
+                        Point current_point = field[y][x];
+                        Vector vector = new Vector();
+                        vector.setStart_point(current_point);
+//                        field[y][x].setActive(false);
+                        current_point = field[getLessNearestAmPixel(x, y)[1]][getLessNearestAmPixel(x, y)[0]];
+                        prev_x_dif = current_point.getXE() - x;
+                        prev_y_dif = current_point.getYE() - y;
+                        Point prev_point = field[y][x];
+                        while((current_point.getXE()!=x || current_point.getYE() != y) && (current_point.getXE()!=0 && current_point.getYE() != 0 && current_point.getXE()!=X_SIZE-1 && current_point.getYE() != Y_SIZE-1) && current_point.getNearAmount() != 0) {
+                            if(current_point.isActive()) {
+                                x_dif = current_point.getXE() - prev_point.getXE();
+                                y_dif = current_point.getYE() - prev_point.getYE();
+                                if(x_dif!=prev_x_dif || y_dif != prev_y_dif) {
+                                    vector.setEnd_point(prev_point);
+                                    vectors.add(vector);
+                                    vector = new Vector();
+                                    vector.setStart_point(prev_point);
+                                    prev_x_dif = x_dif;
+                                    prev_y_dif = y_dif;
+                                }
+                                current_point.setActive(false);
+                                prev_point = current_point;
+                                int[] coords = getLessNearestAmPixel(current_point.getXE(), current_point.getYE());
+                                int xe = coords[0];
+                                int ye = coords[1];
+                                current_point = field[ye][xe];
+                                if(current_point.getXE()==x && current_point.getYE() == y) {
+                                    vector.setEnd_point(current_point);
+                                    current_point.setActive(false);
+                                    vectors.add(vector);
+                                }
+                            }
+                        }
+                        line.setVectors(vectors);
+                        vectors = new ArrayList<>();
+                        lines.add(line);
+                        line = new Line();
+                    }
+                }
+            }
+        }
+
+    }
+
+
+
+    public static void main(String[] args) {
+        makeFractal("mandelbrot", 0, 0, 0, 0.5, 1, 0, 0, 0, 0.7, 1);
+        for (int x = 0; x < Y_SIZE; x++) {
+            for (int y = 0; y < X_SIZE; y++) {
+                System.out.println(field[y][x].getR() + " " + field[y][x].getG() + " " + field[y][x].getB());
+            }
+        }
+//        for(int x = 0; x < X_SIZE; x++) {
+//            for(int y = 0; y < X_SIZE; y++) {
+//                field[y][x] = new Point(x, y);
+//                field[y][x].SetRGB(255, 255, 255);
+//                field[y][x].setActive(false);
+//            }
+//        }
+//
+//        for(int i = 150; i < 200; i++) { //верхняя грань
+//            field[150][i].SetRGB(0, 0, 0);
+//            field[150][i].setActive(true);
+//        }
+//
+//        for(int i = 150; i < 200; i++) { //левая грань
+//            field[i][150].SetRGB(0, 0, 0);
+//            field[i][150].setActive(true);
+//        }
+//
+//        for(int i = 150; i < 200; i++) { //нижняя грань
+//            field[199][i].SetRGB(0, 0, 0);
+//            field[199][i].setActive(true);
+//        }
+//
+//        for(int i = 150; i < 200; i++) { //правая грань
+//            field[i][199].SetRGB(0, 0, 0);
+//            field[i][199].setActive(true);
+//        }
+//
+//
+//        for(int i = 0; i < 20; i++) {
+//            field[15][i].SetRGB(0, 0, 0);
+//            field[15][i].setActive(true);
+//        }
+//        for(int i = 15; i < 30; i++) {
+//            field[i][19].SetRGB(0, 0, 0);
+//            field[i][19].setActive(true);
+//        }
+//        for(int i = 0; i < 20; i++) {
+//            field[29][i].SetRGB(0, 0, 0);
+//            field[29][i].setActive(true);
+//        }
+//
+        setAmOfNearestPoints();
+        GUI app = new GUI();
+        app.setVisible(true);
+        buildLines();
+        for(Line line: lines) {
+            ArrayList<Vector> vectors = line.getVectors();
+            for(Vector vector : vectors) {
+                if(vector != null)
+                    System.out.println(vector.getStart_point() + " " + vector.getEnd_point());
+            }
+        }
+    }
+
+    static class GraphicsPanel extends JPanel {
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+
+//            Graphics2D g2 = (Graphics2D) g;
+//
+//            for(int y = 0; y < Y_SIZE; y++) {
+//                for(int x = 0; x < X_SIZE; x++) {
+//                    g.setColor(new Color(field[y][x].getR(), field[y][x].getG(), field[y][x].getB()));
+//                    g.drawOval(field[y][x].getXE(), field[y][x].getYE(), 1, 1);
+//                }
+//            }
+            for(Line line: lines) {
+                for(Vector vector: line.getVectors()) {
+                    if(vector != null)
+                        g.setColor(new Color(vector.getEnd_point().getR(), vector.getEnd_point().getG(), vector.getEnd_point().getB()));
+                        g.drawLine(vector.getStart_point().getXE() + 1, vector.getStart_point().getYE() + 1, vector.getEnd_point().getXE() + 1, vector.getEnd_point().getYE() + 1);
+                }
+
+            }
+        }
+    }
+
+    static class GUI extends JFrame {
+        GraphicsPanel panel  = new GraphicsPanel();
+
+        public GUI () {
+            super("fractal");
+            this.setVisible(true);
+            this.setBounds(100, 100, 600, 600);
+            this.add(panel);
+            this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        }
+    }
+}
+
+
+
