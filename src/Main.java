@@ -1,5 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static java.lang.Math.*;
@@ -8,7 +11,7 @@ public class Main {
     private static final double M_PI = 3.1415926535;
     private static final int X_SIZE = 600;
     private static final int Y_SIZE = 600;
-    private static Point[][] field = new Point[Y_SIZE][X_SIZE]; //1 полусфера
+    private static Point[][] field = new Point[Y_SIZE][X_SIZE];
     private static ArrayList<Line> lines = new ArrayList<>();
 
     public static double sqrt(double value) {
@@ -25,7 +28,89 @@ public class Main {
             }
         }
     }
-    public static void makeFractal(String fractalName, double x0, double y0, double z0, double w0, double R0, double x1, double y1, double z1, double w1, double R1) {
+
+    public static void makeZhuliaMandelbrot(String fractalName) { //рисует фрактал мандельброта или жулиа для примера
+        for(double x = -3; x < 3; x+=0.01) {
+            for(double y = -3; y < 3; y+=0.01) {
+                int YE = (int) ((3+y)*100);
+                int XE = (int) ((3+x)*100);
+                field[YE][XE] = new Point(XE, YE);
+                Complex c = null; Complex z = null;
+                if(fractalName.toLowerCase().equals("mandelbrot")) {
+                    c = new Complex(x, y);
+                    z = new Complex(0, 0);
+                }
+                else
+                if(fractalName.toLowerCase().equals("zhulia")) {
+                    z = new Complex(x, y);
+                    c = new Complex(0.28, 0.0113);
+                }
+                int iter = 0;
+                while(z.Length() < 4 && iter!=100) {
+                    z = z.Multi(z).Sum(c);
+                    iter++;
+                }
+                if (iter == 100)
+                    field[YE][XE].SetRGB(0, 0, 0);
+                else if (iter % 17 == 3)
+                    field[YE][XE].SetRGB(230, 230, 250);
+
+                else if (iter % 17 == 2)
+                    field[YE][XE].SetRGB(255, 99, 71);
+
+                else if (iter % 17 == 1)
+                    field[YE][XE].SetRGB(195, 176, 145);
+
+                else if (iter % 17 == 0)
+                    field[YE][XE].SetRGB(255, 255, 255);
+
+                else if (iter % 17 == 16)
+                    field[YE][XE].SetRGB(100, 149, 237);
+
+                else if (iter % 17 == 15)
+                    field[YE][XE].SetRGB(154, 205, 50);
+
+                else if (iter % 17 == 14)
+                    field[YE][XE].SetRGB(245, 222, 179);
+
+                else if (iter % 17 == 13)
+                    field[YE][XE].SetRGB(211, 211, 211);
+
+                else if (iter % 17 == 12)
+                    field[YE][XE].SetRGB(135, 206, 250);
+
+                else if (iter % 17 == 11)
+                    field[YE][XE].SetRGB(46, 139, 87);
+
+                else if (iter % 17 == 10)
+                    field[YE][XE].SetRGB(255, 255, 255);
+
+                else if (iter % 17 == 9)
+                    field[YE][XE].SetRGB(48, 230, 200);
+
+                else if (iter % 17 == 8)
+                    field[YE][XE].SetRGB(255, 165, 0);
+
+                else if (iter % 17 == 7)
+                    field[YE][XE].SetRGB(128, 0, 128);
+
+                else if (iter % 17 == 6)
+                    field[YE][XE].SetRGB(231, 254, 255);
+
+                else if (iter % 17 == 5)
+                    field[YE][XE].SetRGB(255, 0, 0);
+
+                else if (iter % 17 == 4)
+                    field[YE][XE].SetRGB(173, 216, 230);
+                if (iter != 100)
+                    field[YE][XE].setzVertical(iter % 17);
+                else
+                    field[YE][XE].setzVertical(iter);
+            }
+        }
+    }
+
+    public static void makeSphericalFractal(String fractalName, double x0, double y0, double z0, double w0, double R0, double x1, double y1, double z1, double w1, double R1) { //строит фрактальное изображение (развернутое)
         for(int x = 0; x < X_SIZE; x++) {
             for(int y = 0; y < X_SIZE; y++) {
                 field[y][x] = new Point(x, y);
@@ -144,7 +229,7 @@ public class Main {
         }
     }
 
-    public static void setAmOfNearestPoints() {
+    public static void setAmOfNearestPoints() { //находит ближайшие одинаковые по цвету точки и их количество, для всех точек
         for(int i = 0; i < Y_SIZE; i++) {
             for(int j = 0; j < X_SIZE; j++) {
                 if(j == 0) { //левый столбец
@@ -335,7 +420,7 @@ public class Main {
         }
     }
 
-    public static boolean linesAreExisted() {
+    public static boolean linesAreExisted() { //если не все линии проверены
         for (int i = 0; i < Y_SIZE; i++) {
             for (int j = 0; j < X_SIZE; j++) {
                 if (field[i][j].isActive())
@@ -345,41 +430,47 @@ public class Main {
         return true;
     }
 
-    public static int[] getLessNearestAmPixel(int x, int y) {
+    public static int[] getLessNearestAmPixel(int x, int y) { //получить координаты пикселя с наименьшим количеством ближайших пикселей (проход по границе)
         int minAmount = 10, xmin = 0, ymin = 0;
         ArrayList<int[]> nearestPointsCoordinates = field[y][x].getNearestPointsCoordinates();
         for(int[] coords: nearestPointsCoordinates) {
             int xe = coords[0];
             int ye = coords[1];
-            if(field[ye][xe].getNearAmount() <= minAmount && field[ye][xe].isActive()) {
+            if(field[ye][xe].getNearAmount() < minAmount && field[ye][xe].isActive()) {
                 minAmount = field[ye][xe].getNearAmount();
                 xmin = coords[0];
                 ymin = coords[1];
             }
         }
-        return new int[] {xmin, ymin};
+        if(minAmount!=10)
+            return new int[] {X_SIZE+1, Y_SIZE+1};
+        else
+            return new int[] {xmin, ymin};
     }
 
-//    public static boolean isNotOver(Point point, int start_x, int start_y) {
-//        if(point.)
-//    }
-    public static void buildLines() {
+    public static void buildLines() { //нахождение ломаных, построение линий
         if(linesAreExisted()) {
             Line line = new Line();
             ArrayList<Vector> vectors = new ArrayList<>();
             for (int y = 0; y < Y_SIZE; y++) {
                 for (int x = 0; x < X_SIZE; x++) {
-                    if(field[y][x].isActive()) {
+                    if(field[y][x].isActive() && field[y][x].getNearAmount() <= 6) {
                         int prev_x_dif = 0, prev_y_dif = 0, x_dif=0, y_dif=0;
                         Point current_point = field[y][x];
                         Vector vector = new Vector();
                         vector.setStart_point(current_point);
-//                        field[y][x].setActive(false);
-                        current_point = field[getLessNearestAmPixel(x, y)[1]][getLessNearestAmPixel(x, y)[0]];
+                        int[] c = getLessNearestAmPixel(x, y);
+                        if(c[0] == X_SIZE+1 && c[1] == Y_SIZE+1) {
+                            current_point.setActive(false);
+                            vector.setEnd_point(current_point);
+                            vectors.add(vector);
+                            continue;
+                        }
+                        current_point = field[c[1]][c[0]];
                         prev_x_dif = current_point.getXE() - x;
                         prev_y_dif = current_point.getYE() - y;
                         Point prev_point = field[y][x];
-                        while((current_point.getXE()!=x || current_point.getYE() != y) && (current_point.getXE()!=0 && current_point.getYE() != 0 && current_point.getXE()!=X_SIZE-1 && current_point.getYE() != Y_SIZE-1) && current_point.getNearAmount() != 0) {
+                        while((current_point.getXE()!=x || current_point.getYE() != y) && ((current_point.getXE()!=0 && current_point.getYE() != 0 && current_point.getXE()!=X_SIZE-1 && current_point.getYE() != Y_SIZE-1))) { // || current_point.getNearAmount() != 0)
                             if(current_point.isActive()) {
                                 x_dif = current_point.getXE() - prev_point.getXE();
                                 y_dif = current_point.getYE() - prev_point.getYE();
@@ -393,9 +484,22 @@ public class Main {
                                 }
                                 current_point.setActive(false);
                                 prev_point = current_point;
-                                int[] coords = getLessNearestAmPixel(current_point.getXE(), current_point.getYE());
+                                int[] coords;
+                                if((current_point.getXE() == 0 || current_point.getXE() == X_SIZE-1) && current_point.getNearAmount() == 0) {
+                                    if(!current_point.isActive())
+                                        break;
+                                    coords = new int[]{X_SIZE - 1 - current_point.getXE(), 600 - current_point.getYE()};
+                                }
+                                else
+                                    coords = getLessNearestAmPixel(current_point.getXE(), current_point.getYE());
                                 int xe = coords[0];
                                 int ye = coords[1];
+                                if(xe == X_SIZE+1 && ye == Y_SIZE+1) {
+                                    vector.setEnd_point(current_point);
+                                    current_point.setActive(false);
+                                    vectors.add(vector);
+                                    break;
+                                }
                                 current_point = field[ye][xe];
                                 if(current_point.getXE()==x && current_point.getYE() == y) {
                                     vector.setEnd_point(current_point);
@@ -412,93 +516,57 @@ public class Main {
                 }
             }
         }
-
     }
 
 
+    public static void main(String[] args) throws IOException {
+        makeSphericalFractal("mandelbrot", 0, 0, 0, -0.9, 1.2, 0, 0, 0, -0.5, 1); //для сферического фрактала Мандельброта
+        makeZhuliaMandelbrot("zhulia");
+        File file = new File(".\\src\\file.txt");
+        FileWriter writer = new FileWriter(file);
 
-    public static void main(String[] args) {
-        makeFractal("mandelbrot", 0, 0, 0, 0.5, 1, 0, 0, 0, 0.7, 1);
-        for (int x = 0; x < Y_SIZE; x++) {
+        for (int x = 0; x < Y_SIZE; x++) { //вывод в консоль RGB каждой точки
             for (int y = 0; y < X_SIZE; y++) {
                 System.out.println(field[y][x].getR() + " " + field[y][x].getG() + " " + field[y][x].getB());
             }
         }
-//        for(int x = 0; x < X_SIZE; x++) {
-//            for(int y = 0; y < X_SIZE; y++) {
-//                field[y][x] = new Point(x, y);
-//                field[y][x].SetRGB(255, 255, 255);
-//                field[y][x].setActive(false);
-//            }
-//        }
-//
-//        for(int i = 150; i < 200; i++) { //верхняя грань
-//            field[150][i].SetRGB(0, 0, 0);
-//            field[150][i].setActive(true);
-//        }
-//
-//        for(int i = 150; i < 200; i++) { //левая грань
-//            field[i][150].SetRGB(0, 0, 0);
-//            field[i][150].setActive(true);
-//        }
-//
-//        for(int i = 150; i < 200; i++) { //нижняя грань
-//            field[199][i].SetRGB(0, 0, 0);
-//            field[199][i].setActive(true);
-//        }
-//
-//        for(int i = 150; i < 200; i++) { //правая грань
-//            field[i][199].SetRGB(0, 0, 0);
-//            field[i][199].setActive(true);
-//        }
-//
-//
-//        for(int i = 0; i < 20; i++) {
-//            field[15][i].SetRGB(0, 0, 0);
-//            field[15][i].setActive(true);
-//        }
-//        for(int i = 15; i < 30; i++) {
-//            field[i][19].SetRGB(0, 0, 0);
-//            field[i][19].setActive(true);
-//        }
-//        for(int i = 0; i < 20; i++) {
-//            field[29][i].SetRGB(0, 0, 0);
-//            field[29][i].setActive(true);
-//        }
-//
+
         setAmOfNearestPoints();
+
         GUI app = new GUI();
         app.setVisible(true);
+
         buildLines();
-        for(Line line: lines) {
+
+        for(Line line: lines) { //вывод в консоль координат каждого вектора
             ArrayList<Vector> vectors = line.getVectors();
             for(Vector vector : vectors) {
-                if(vector != null)
+                if(vector != null) {
                     System.out.println(vector.getStart_point() + " " + vector.getEnd_point());
+                    writer.write(vector.getStart_point().getXE() + " " + vector.getStart_point().getYE() + " " + vector.getEnd_point().getXE() + " " + vector.getEnd_point().getYE() + "\n"); //вывод координат в txt файл
+                }
             }
         }
+        writer.close();
     }
 
     static class GraphicsPanel extends JPanel {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-
-//            Graphics2D g2 = (Graphics2D) g;
-//
-//            for(int y = 0; y < Y_SIZE; y++) {
+//            for(int y = 0; y < Y_SIZE; y++) { // блок рисования фрактала через точки
 //                for(int x = 0; x < X_SIZE; x++) {
 //                    g.setColor(new Color(field[y][x].getR(), field[y][x].getG(), field[y][x].getB()));
 //                    g.drawOval(field[y][x].getXE(), field[y][x].getYE(), 1, 1);
 //                }
 //            }
-            for(Line line: lines) {
+            for(Line line: lines) { //блок рисования фрактала через найденные вектора
                 for(Vector vector: line.getVectors()) {
                     if(vector != null)
                         g.setColor(new Color(vector.getEnd_point().getR(), vector.getEnd_point().getG(), vector.getEnd_point().getB()));
-                        g.drawLine(vector.getStart_point().getXE() + 1, vector.getStart_point().getYE() + 1, vector.getEnd_point().getXE() + 1, vector.getEnd_point().getYE() + 1);
+                    assert vector != null;
+                    g.drawLine(vector.getStart_point().getXE(), vector.getStart_point().getYE(), vector.getEnd_point().getXE(), vector.getEnd_point().getYE());
                 }
-
             }
         }
     }
