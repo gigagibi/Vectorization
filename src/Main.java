@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 
 import static java.lang.Math.*;
 
@@ -518,36 +520,36 @@ public class Main {
         }
     }
 
-
     public static void main(String[] args) throws IOException {
-        makeSphericalFractal("mandelbrot", 0, 0, 0, -0.9, 1.2, 0, 0, 0, -0.5, 1); //для сферического фрактала Мандельброта
+        Random rand = new Random();
+        //makeSphericalFractal("mandelbrot", 0, 0, 0, -0.9, 1.2, 0, 0, 0, -0.5, 1); //для сферического фрактала Мандельброта
         makeZhuliaMandelbrot("zhulia");
-        File file = new File(".\\src\\file.txt");
-        FileWriter writer = new FileWriter(file);
-
+        File file = null;
+        FileWriter writer = null;
         for (int x = 0; x < Y_SIZE; x++) { //вывод в консоль RGB каждой точки
             for (int y = 0; y < X_SIZE; y++) {
                 System.out.println(field[y][x].getR() + " " + field[y][x].getG() + " " + field[y][x].getB());
             }
         }
-
         setAmOfNearestPoints();
-
         GUI app = new GUI();
         app.setVisible(true);
-
         buildLines();
-
-        for(Line line: lines) { //вывод в консоль координат каждого вектора
+        HashMap<Integer, Integer> linesCounters = new HashMap<>();
+        for(Line line: lines) {
             ArrayList<Vector> vectors = line.getVectors();
+            file = new File(".\\src\\lines\\h_" + vectors.get(0).getStart_point().getzVertical() + ".txt");
+            while(file.exists())
+                file = new File(".\\src\\lines\\h_" + vectors.get(0).getStart_point().getzVertical() + "_" + rand.nextInt(20) + ".txt");
+            writer = new FileWriter(file);
             for(Vector vector : vectors) {
                 if(vector != null) {
                     System.out.println(vector.getStart_point() + " " + vector.getEnd_point());
-                    writer.write(vector.getStart_point().getXE() + " " + vector.getStart_point().getYE() + " " + vector.getEnd_point().getXE() + " " + vector.getEnd_point().getYE() + "\n"); //вывод координат в txt файл
+                    writer.write(vector.getStart_point().getXE() + " " + vector.getStart_point().getYE() + " " + vector.getStart_point().getzVertical() + "\n");
                 }
             }
+            writer.close();
         }
-        writer.close();
     }
 
     static class GraphicsPanel extends JPanel {
