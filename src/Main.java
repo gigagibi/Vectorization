@@ -22,20 +22,14 @@ public class Main {
             return Math.sqrt(value);
     }
 
-    public Main() {
-        for(int x = 0; x < X_SIZE; x++) {
-            for(int y = 0; y < X_SIZE; y++) {
-                field[x][y] = new Point(x, y);
-            }
-        }
-    }
-
     public static void makeZhuliaMandelbrot(String fractalName) { //рисует фрактал мандельброта или жулиа для примера
         for(double x = -3; x < 3; x+=0.01) {
             for(double y = -3; y < 3; y+=0.01) {
                 int YE = (int) ((3+y)*100);
                 int XE = (int) ((3+x)*100);
                 field[YE][XE] = new Point(XE, YE);
+                field[YE][XE].setRGB(255, 255, 255);
+                field[YE][XE].setActive(false);
                 Complex c = null; Complex z = null;
                 if(fractalName.toLowerCase().equals("mandelbrot")) {
                     c = new Complex(x, y);
@@ -47,66 +41,72 @@ public class Main {
                     c = new Complex(0.28, 0.0113);
                 }
                 int iter = 0;
-                while(z.Length() < 4 && iter!=100) {
+                while(true) {
+                    assert z != null;
+                    if (!(z.Length() < 4 && iter!=100)) break;
                     z = z.Multi(z).Sum(c);
                     iter++;
                 }
-                if (iter == 100)
+                if (iter >= 90 && iter <= 100) {
                     field[YE][XE].setRGB(0, 0, 0);
-                else if (iter % 17 == 3)
-                    field[YE][XE].setRGB(230, 230, 250);
-
-                else if (iter % 17 == 2)
-                    field[YE][XE].setRGB(255, 99, 71);
-
-                else if (iter % 17 == 1)
-                    field[YE][XE].setRGB(195, 176, 145);
-
-                else if (iter % 17 == 0)
-                    field[YE][XE].setRGB(255, 255, 255);
-
-                else if (iter % 17 == 16)
-                    field[YE][XE].setRGB(100, 149, 237);
-
-                else if (iter % 17 == 15)
-                    field[YE][XE].setRGB(154, 205, 50);
-
-                else if (iter % 17 == 14)
-                    field[YE][XE].setRGB(245, 222, 179);
-
-                else if (iter % 17 == 13)
-                    field[YE][XE].setRGB(211, 211, 211);
-
-                else if (iter % 17 == 12)
-                    field[YE][XE].setRGB(135, 206, 250);
-
-                else if (iter % 17 == 11)
-                    field[YE][XE].setRGB(46, 139, 87);
-
-                else if (iter % 17 == 10)
-                    field[YE][XE].setRGB(255, 255, 255);
-
-                else if (iter % 17 == 9)
-                    field[YE][XE].setRGB(48, 230, 200);
-
-                else if (iter % 17 == 8)
-                    field[YE][XE].setRGB(255, 165, 0);
-
-                else if (iter % 17 == 7)
-                    field[YE][XE].setRGB(128, 0, 128);
-
-                else if (iter % 17 == 6)
-                    field[YE][XE].setRGB(231, 254, 255);
-
-                else if (iter % 17 == 5)
-                    field[YE][XE].setRGB(255, 0, 0);
-
-                else if (iter % 17 == 4)
-                    field[YE][XE].setRGB(173, 216, 230);
-                if (iter != 100)
+                    field[YE][XE].setActive(true);
                     field[YE][XE].setzVertical(iter % 17);
-                else
-                    field[YE][XE].setzVertical(iter);
+                }
+
+//                else if (iter % 17 == 3)
+//                    field[YE][XE].setRGB(230, 230, 250);
+//
+//                else if (iter % 17 == 2)
+//                    field[YE][XE].setRGB(255, 99, 71);
+//
+//                else if (iter % 17 == 1)
+//                    field[YE][XE].setRGB(195, 176, 145);
+//
+//                else if (iter % 17 == 0)
+//                    field[YE][XE].setRGB(255, 255, 255);
+//
+//                else if (iter % 17 == 16)
+//                    field[YE][XE].setRGB(100, 149, 237);
+//
+//                else if (iter % 17 == 15)
+//                    field[YE][XE].setRGB(154, 205, 50);
+//
+//                else if (iter % 17 == 14)
+//                    field[YE][XE].setRGB(245, 222, 179);
+//
+//                else if (iter % 17 == 13)
+//                    field[YE][XE].setRGB(211, 211, 211);
+//
+//                else if (iter % 17 == 12)
+//                    field[YE][XE].setRGB(135, 206, 250);
+//
+//                else if (iter % 17 == 11)
+//                    field[YE][XE].setRGB(46, 139, 87);
+//
+//                else if (iter % 17 == 10)
+//                    field[YE][XE].setRGB(255, 255, 255);
+
+//                else if (iter % 17 == 9)
+//                    field[YE][XE].setRGB(48, 230, 200);
+
+//                else if (iter % 17 == 8)
+//                    field[YE][XE].setRGB(255, 165, 0);
+//
+//                else if (iter % 17 == 7)
+//                    field[YE][XE].setRGB(128, 0, 128);
+//
+//                else if (iter % 17 == 6)
+//                    field[YE][XE].setRGB(231, 254, 255);
+//
+//                else if (iter % 17 == 5)
+//                    field[YE][XE].setRGB(255, 0, 0);
+//
+//                else if (iter % 17 == 4)
+//                    field[YE][XE].setRGB(173, 216, 230);
+//                if (iter != 100)
+//                    field[YE][XE].setzVertical(iter % 17);
+//                else
+//                    field[YE][XE].setzVertical(iter);
             }
         }
     }
@@ -520,7 +520,7 @@ public class Main {
 //                                }
                             }
                         }
-                        if(vectors.size()!=0) {
+                        if(vectors.size()>=60) {
                             line.setVectors(vectors);
                             vectors = new ArrayList<>();
                             lines.add(line);
@@ -576,8 +576,8 @@ public class Main {
         //makeTestFieldSquare();
 //        makeTestFieldTriangle();
         Random rand = new Random();
-        makeSphericalFractal("mandelbrot", 0, 0, 0, -0.9, 1.2, 0, 0, 0, -0.5, 1); //для сферического фрактала Мандельброта
-//        makeZhuliaMandelbrot("zhulia");
+//        makeSphericalFractal("mandelbrot", 0, 0, 0, -0.9, 1.2, 0, 0, 0, -0.5, 1); //для сферического фрактала Мандельброта
+        makeZhuliaMandelbrot("mandelbrot");
         File file = null;
         FileWriter writer = null;
         for (int x = 0; x < Y_SIZE; x++) { //вывод в консоль RGB каждой точки
@@ -585,36 +585,58 @@ public class Main {
                 System.out.println(field[y][x].getR() + " " + field[y][x].getG() + " " + field[y][x].getB());
             }
         }
+        file = new File(".\\src\\file.svg");
+        writer = new FileWriter(file);
         setAmOfNearestPoints();
         GUI app = new GUI();
         app.setVisible(true);
         buildLines();
+        writer.write("""
+                            <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                            <svg version = "1.1"
+                                 baseProfile="full"
+                                 xmlns = "http://www.w3.org/2000/svg"
+                                 xmlns:xlink = "http://www.w3.org/1999/xlink"
+                                 xmlns:ev = "http://www.w3.org/2001/xml-events"
+                                 height = "600px"  width = "600px">
+                                <rect x="0" y="0" width="600" height="600"
+                                      fill="none" stroke="none" stroke-width="5px" stroke-opacity="0.5"/>""");
         for(Line line: lines) {
             ArrayList<Vector> vectors = line.getVectors();
             System.out.println(line.toString());
             for (Vector vector : vectors) {
                 if (vector != null) {
+                    int x0 = vector.getStart_point().getXE();
+                    int y0 = vector.getStart_point().getYE();
+                    int x1 = vector.getEnd_point().getXE();
+                    int y1 = vector.getEnd_point().getYE();
+                    String r = Integer.toHexString(vector.getEnd_point().getR());
+                    String g = Integer.toHexString(vector.getEnd_point().getG());
+                    String b = Integer.toHexString(vector.getEnd_point().getB());
                     System.out.println(vector.getStart_point() + " " + vector.getEnd_point());
+                    writer.write("<line x1=\"" + x0 + "\" y1=\"" + y0 + "\" x2=\"" + x1 + "\" y2=\"" + y1 + "\" style=\"stroke: #" + r + g + b + "; stroke-width: 0.5px;\" />\n");
                 }
             }
         }
+        writer.write("</svg>");
+        writer.close();
 
 //        HashMap<Integer, Integer> linesCounters = new HashMap<>();
-//        for(Line line: lines) {
-//            ArrayList<Vector> vectors = line.getVectors();
-//            ArrayList<Integer> numbers = new ArrayList<>();
-//            file = new File(".\\src\\lines\\h_" + vectors.get(0).getStart_point().getzVertical() + ".txt");
-//            while (file.exists())
-//                file = new File(".\\src\\lines\\h_" + vectors.get(0).getStart_point().getzVertical() + "_" + rand.nextInt(200000) + ".txt");
-//            writer = new FileWriter(file);
-//            for (Vector vector : vectors) {
-//                if (vector != null) {
-//                    System.out.println(vector.getStart_point() + " " + vector.getEnd_point());
-//                    writer.write(vector.getStart_point().getXE() + " " + vector.getStart_point().getYE() + " " + vector.getStart_point().getzVertical() + "\n");
-//                }
-//            }
-//            writer.close();
-//        }
+        for(Line line: lines) {
+            ArrayList<Vector> vectors = line.getVectors();
+            ArrayList<Integer> numbers = new ArrayList<>();
+            file = new File(".\\src\\lines\\h_" + vectors.get(0).getStart_point().getzVertical() + ".txt");
+            while (file.exists())
+                file = new File(".\\src\\lines\\h_" + vectors.get(0).getStart_point().getzVertical() + "_" + rand.nextInt(200000) + ".txt");
+            writer = new FileWriter(file);
+            for (Vector vector : vectors) {
+                if (vector != null) {
+                    System.out.println(vector.getStart_point() + " " + vector.getEnd_point());
+                    writer.write(vector.getStart_point().getXE() + " " + vector.getStart_point().getYE() + " " + vector.getStart_point().getzVertical() + "\n");
+                }
+            }
+            writer.close();
+        }
     }
 
     static class GraphicsPanel extends JPanel {
