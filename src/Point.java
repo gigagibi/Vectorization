@@ -74,7 +74,7 @@ public class Point {
         return B;
     }
 
-    public void SetRGB(int r, int g, int b) {
+    public void setRGB(int r, int g, int b) {
         R = r; B = b; G = g;
         zVertical = (r+b+g)/3;
     }

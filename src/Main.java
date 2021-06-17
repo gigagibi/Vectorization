@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 import static java.lang.Math.*;
@@ -53,57 +52,57 @@ public class Main {
                     iter++;
                 }
                 if (iter == 100)
-                    field[YE][XE].SetRGB(0, 0, 0);
+                    field[YE][XE].setRGB(0, 0, 0);
                 else if (iter % 17 == 3)
-                    field[YE][XE].SetRGB(230, 230, 250);
+                    field[YE][XE].setRGB(230, 230, 250);
 
                 else if (iter % 17 == 2)
-                    field[YE][XE].SetRGB(255, 99, 71);
+                    field[YE][XE].setRGB(255, 99, 71);
 
                 else if (iter % 17 == 1)
-                    field[YE][XE].SetRGB(195, 176, 145);
+                    field[YE][XE].setRGB(195, 176, 145);
 
                 else if (iter % 17 == 0)
-                    field[YE][XE].SetRGB(255, 255, 255);
+                    field[YE][XE].setRGB(255, 255, 255);
 
                 else if (iter % 17 == 16)
-                    field[YE][XE].SetRGB(100, 149, 237);
+                    field[YE][XE].setRGB(100, 149, 237);
 
                 else if (iter % 17 == 15)
-                    field[YE][XE].SetRGB(154, 205, 50);
+                    field[YE][XE].setRGB(154, 205, 50);
 
                 else if (iter % 17 == 14)
-                    field[YE][XE].SetRGB(245, 222, 179);
+                    field[YE][XE].setRGB(245, 222, 179);
 
                 else if (iter % 17 == 13)
-                    field[YE][XE].SetRGB(211, 211, 211);
+                    field[YE][XE].setRGB(211, 211, 211);
 
                 else if (iter % 17 == 12)
-                    field[YE][XE].SetRGB(135, 206, 250);
+                    field[YE][XE].setRGB(135, 206, 250);
 
                 else if (iter % 17 == 11)
-                    field[YE][XE].SetRGB(46, 139, 87);
+                    field[YE][XE].setRGB(46, 139, 87);
 
                 else if (iter % 17 == 10)
-                    field[YE][XE].SetRGB(255, 255, 255);
+                    field[YE][XE].setRGB(255, 255, 255);
 
                 else if (iter % 17 == 9)
-                    field[YE][XE].SetRGB(48, 230, 200);
+                    field[YE][XE].setRGB(48, 230, 200);
 
                 else if (iter % 17 == 8)
-                    field[YE][XE].SetRGB(255, 165, 0);
+                    field[YE][XE].setRGB(255, 165, 0);
 
                 else if (iter % 17 == 7)
-                    field[YE][XE].SetRGB(128, 0, 128);
+                    field[YE][XE].setRGB(128, 0, 128);
 
                 else if (iter % 17 == 6)
-                    field[YE][XE].SetRGB(231, 254, 255);
+                    field[YE][XE].setRGB(231, 254, 255);
 
                 else if (iter % 17 == 5)
-                    field[YE][XE].SetRGB(255, 0, 0);
+                    field[YE][XE].setRGB(255, 0, 0);
 
                 else if (iter % 17 == 4)
-                    field[YE][XE].SetRGB(173, 216, 230);
+                    field[YE][XE].setRGB(173, 216, 230);
                 if (iter != 100)
                     field[YE][XE].setzVertical(iter % 17);
                 else
@@ -172,57 +171,57 @@ public class Main {
                 int YE = (int) ((3+ye)*100);
                 int XE = (int) ((3+xe)*100);
                 if (iter == 100)
-                    field[YE][XE].SetRGB(0, 0, 0);
+                    field[YE][XE].setRGB(0, 0, 0);
                 else if (iter % 17 == 3)
-                    field[YE][XE].SetRGB(230, 230, 250);
+                    field[YE][XE].setRGB(230, 230, 250);
 
                 else if (iter % 17 == 2)
-                    field[YE][XE].SetRGB(255, 99, 71);
+                    field[YE][XE].setRGB(255, 99, 71);
 
                 else if (iter % 17 == 1)
-                    field[YE][XE].SetRGB(195, 176, 145);
+                    field[YE][XE].setRGB(195, 176, 145);
 
                 else if (iter % 17 == 0)
-                    field[YE][XE].SetRGB(255, 255, 255);
+                    field[YE][XE].setRGB(255, 255, 255);
 
                 else if (iter % 17 == 16)
-                    field[YE][XE].SetRGB(100, 149, 237);
+                    field[YE][XE].setRGB(100, 149, 237);
 
                 else if (iter % 17 == 15)
-                    field[YE][XE].SetRGB(154, 205, 50);
+                    field[YE][XE].setRGB(154, 205, 50);
 
                 else if (iter % 17 == 14)
-                    field[YE][XE].SetRGB(245, 222, 179);
+                    field[YE][XE].setRGB(245, 222, 179);
 
                 else if (iter % 17 == 13)
-                    field[YE][XE].SetRGB(211, 211, 211);
+                    field[YE][XE].setRGB(211, 211, 211);
 
                 else if (iter % 17 == 12)
-                    field[YE][XE].SetRGB(135, 206, 250);
+                    field[YE][XE].setRGB(135, 206, 250);
 
                 else if (iter % 17 == 11)
-                    field[YE][XE].SetRGB(46, 139, 87);
+                    field[YE][XE].setRGB(46, 139, 87);
 
                 else if (iter % 17 == 10)
-                    field[YE][XE].SetRGB(255, 255, 255);
+                    field[YE][XE].setRGB(255, 255, 255);
 
                 else if (iter % 17 == 9)
-                    field[YE][XE].SetRGB(48, 230, 200);
+                    field[YE][XE].setRGB(48, 230, 200);
 
                 else if (iter % 17 == 8)
-                    field[YE][XE].SetRGB(255, 165, 0);
+                    field[YE][XE].setRGB(255, 165, 0);
 
                 else if (iter % 17 == 7)
-                    field[YE][XE].SetRGB(128, 0, 128);
+                    field[YE][XE].setRGB(128, 0, 128);
 
                 else if (iter % 17 == 6)
-                    field[YE][XE].SetRGB(231, 254, 255);
+                    field[YE][XE].setRGB(231, 254, 255);
 
                 else if (iter % 17 == 5)
-                    field[YE][XE].SetRGB(255, 0, 0);
+                    field[YE][XE].setRGB(255, 0, 0);
 
                 else if (iter % 17 == 4)
-                    field[YE][XE].SetRGB(173, 216, 230);
+                    field[YE][XE].setRGB(173, 216, 230);
                 if (iter != 100)
                     field[YE][XE].setzVertical(iter % 17);
                 else
@@ -438,13 +437,13 @@ public class Main {
         for(int[] coords: nearestPointsCoordinates) {
             int xe = coords[0];
             int ye = coords[1];
-            if(field[ye][xe].getNearAmount() < minAmount && field[ye][xe].isActive()) {
+            if(field[ye][xe].getNearAmount() < minAmount && field[ye][xe].isActive() && field[ye][xe].getNearAmount() <= 7) {
                 minAmount = field[ye][xe].getNearAmount();
                 xmin = coords[0];
                 ymin = coords[1];
             }
         }
-        if(minAmount!=10)
+        if(minAmount==10)
             return new int[] {X_SIZE+1, Y_SIZE+1};
         else
             return new int[] {xmin, ymin};
@@ -456,7 +455,7 @@ public class Main {
             ArrayList<Vector> vectors = new ArrayList<>();
             for (int y = 0; y < Y_SIZE; y++) {
                 for (int x = 0; x < X_SIZE; x++) {
-                    if(field[y][x].isActive() && field[y][x].getNearAmount() <= 6) {
+                    if(field[y][x].isActive() && field[y][x].getNearAmount() <= 7) {
                         int prev_x_dif = 0, prev_y_dif = 0, x_dif=0, y_dif=0;
                         Point current_point = field[y][x];
                         Vector vector = new Vector();
@@ -468,6 +467,7 @@ public class Main {
                             vectors.add(vector);
                             continue;
                         }
+                        current_point.setActive(false);
                         current_point = field[c[1]][c[0]];
                         prev_x_dif = current_point.getXE() - x;
                         prev_y_dif = current_point.getYE() - y;
@@ -493,37 +493,91 @@ public class Main {
                                     coords = new int[]{X_SIZE - 1 - current_point.getXE(), 600 - current_point.getYE()};
                                 }
                                 else
-                                    coords = getLessNearestAmPixel(current_point.getXE(), current_point.getYE());
+                                    coords = getLessNearestAmPixel(current_point.getXE(), current_point.getYE()); //needtochange
                                 int xe = coords[0];
                                 int ye = coords[1];
-                                if(xe == X_SIZE+1 && ye == Y_SIZE+1) {
-                                    vector.setEnd_point(current_point);
-                                    current_point.setActive(false);
-                                    vectors.add(vector);
+                                if(xe == X_SIZE+1 && ye == Y_SIZE+1) { //если следующая точка - последняя
+                                    if(current_point.getYE()+1 == y && current_point.getXE() == x || current_point.getYE()+1 == y && current_point.getXE()+1 == x //если последняя точка в пути является начальной точкой линии
+                                    || current_point.getYE()+1 == y && current_point.getXE()-1 == x || current_point.getYE() == y && current_point.getXE()+1 == x
+                                    || current_point.getYE() == y && current_point.getXE()-1 == x || current_point.getYE()-1 == y && current_point.getXE() == x
+                                    || current_point.getYE()-1 == y && current_point.getXE()+1 == x || current_point.getYE()-1 == y && current_point.getXE()-1 == x) {
+                                        vector.setEnd_point(field[y][x]);
+                                        current_point.setActive(false);
+                                        vectors.add(vector);
+                                    }
+                                    else {
+                                        vector.setEnd_point(current_point);
+                                        current_point.setActive(false);
+                                        vectors.add(vector);
+                                    }
                                     break;
                                 }
                                 current_point = field[ye][xe];
-                                if(current_point.getXE()==x && current_point.getYE() == y) {
-                                    vector.setEnd_point(current_point);
-                                    current_point.setActive(false);
-                                    vectors.add(vector);
-                                }
+//                                if(current_point.getXE()==x && current_point.getYE() == y) {
+//                                    vector.setEnd_point(current_point);
+//                                    current_point.setActive(false);
+//                                    vectors.add(vector);
+//                                }
                             }
                         }
-                        line.setVectors(vectors);
-                        vectors = new ArrayList<>();
-                        lines.add(line);
-                        line = new Line();
+                        if(vectors.size()!=0) {
+                            line.setVectors(vectors);
+                            vectors = new ArrayList<>();
+                            lines.add(line);
+                            line = new Line();
+                        }
                     }
                 }
             }
         }
     }
 
+    public static void makeTestFieldSquare() {
+        for (int x = 0; x < Y_SIZE; x++) { //вывод в консоль RGB каждой точки
+            for (int y = 0; y < X_SIZE; y++) {
+                field[y][x] = new Point(x,y);
+                field[y][x].setActive(false);
+                field[y][x].setRGB(255, 255, 255);
+            }
+        }
+
+        for(int y = 50; y < 150; y++) {
+            for(int x = 50; x < 150; x++) {
+                field[y][x].setActive(true);
+                field[y][x].setRGB(0, 0, 0);
+            }
+        }
+    }
+
+    public static void makeTestFieldTriangle() {
+        for (int x = 0; x < Y_SIZE; x++) { //вывод в консоль RGB каждой точки
+            for (int y = 0; y < X_SIZE; y++) {
+                field[y][x] = new Point(x,y);
+                field[y][x].setActive(false);
+                field[y][x].setRGB(255, 255, 255);
+            }
+        }
+
+        for(int i = 100; i < 150; i++) {
+            field[i][i].setActive(true); //149 149
+            field[i][i].setRGB(0, 0, 0);
+        }
+        for(int i = 149; i >= 100; i--) {
+            field[i][149+150-i].setActive(true); //100 199
+            field[i][149+150-i].setRGB(0, 0, 0);
+        }
+        for(int i = 199; i >= 100; i--) {
+            field[100][i].setActive(true); // 100 100
+            field[100][i].setRGB(0, 0, 0);
+        }
+    }
+
     public static void main(String[] args) throws IOException {
+        //makeTestFieldSquare();
+//        makeTestFieldTriangle();
         Random rand = new Random();
-        //makeSphericalFractal("mandelbrot", 0, 0, 0, -0.9, 1.2, 0, 0, 0, -0.5, 1); //для сферического фрактала Мандельброта
-        makeZhuliaMandelbrot("zhulia");
+        makeSphericalFractal("mandelbrot", 0, 0, 0, -0.9, 1.2, 0, 0, 0, -0.5, 1); //для сферического фрактала Мандельброта
+//        makeZhuliaMandelbrot("zhulia");
         File file = null;
         FileWriter writer = null;
         for (int x = 0; x < Y_SIZE; x++) { //вывод в консоль RGB каждой точки
@@ -535,21 +589,32 @@ public class Main {
         GUI app = new GUI();
         app.setVisible(true);
         buildLines();
-        HashMap<Integer, Integer> linesCounters = new HashMap<>();
         for(Line line: lines) {
             ArrayList<Vector> vectors = line.getVectors();
-            file = new File(".\\src\\lines\\h_" + vectors.get(0).getStart_point().getzVertical() + ".txt");
-            while(file.exists())
-                file = new File(".\\src\\lines\\h_" + vectors.get(0).getStart_point().getzVertical() + "_" + rand.nextInt(20) + ".txt");
-            writer = new FileWriter(file);
-            for(Vector vector : vectors) {
-                if(vector != null) {
+            System.out.println(line.toString());
+            for (Vector vector : vectors) {
+                if (vector != null) {
                     System.out.println(vector.getStart_point() + " " + vector.getEnd_point());
-                    writer.write(vector.getStart_point().getXE() + " " + vector.getStart_point().getYE() + " " + vector.getStart_point().getzVertical() + "\n");
                 }
             }
-            writer.close();
         }
+
+//        HashMap<Integer, Integer> linesCounters = new HashMap<>();
+//        for(Line line: lines) {
+//            ArrayList<Vector> vectors = line.getVectors();
+//            ArrayList<Integer> numbers = new ArrayList<>();
+//            file = new File(".\\src\\lines\\h_" + vectors.get(0).getStart_point().getzVertical() + ".txt");
+//            while (file.exists())
+//                file = new File(".\\src\\lines\\h_" + vectors.get(0).getStart_point().getzVertical() + "_" + rand.nextInt(200000) + ".txt");
+//            writer = new FileWriter(file);
+//            for (Vector vector : vectors) {
+//                if (vector != null) {
+//                    System.out.println(vector.getStart_point() + " " + vector.getEnd_point());
+//                    writer.write(vector.getStart_point().getXE() + " " + vector.getStart_point().getYE() + " " + vector.getStart_point().getzVertical() + "\n");
+//                }
+//            }
+//            writer.close();
+//        }
     }
 
     static class GraphicsPanel extends JPanel {
@@ -585,6 +650,3 @@ public class Main {
         }
     }
 }
-
-
-
