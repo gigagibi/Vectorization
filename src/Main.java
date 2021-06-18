@@ -47,7 +47,7 @@ public class Main {
                     z = z.Multi(z).Sum(c);
                     iter++;
                 }
-                if (iter >= 90 && iter <= 100) {
+                if (iter == 100) {
                     field[YE][XE].setRGB(0, 0, 0);
                     field[YE][XE].setActive(true);
                     field[YE][XE].setzVertical(iter % 17);
@@ -421,6 +421,10 @@ public class Main {
         }
     }
 
+    public static void deleteNoisePoints() { //как вариант
+
+    }
+
     public static boolean linesAreExisted() { //если не все линии проверены
         for (int i = 0; i < Y_SIZE; i++) {
             for (int j = 0; j < X_SIZE; j++) {
@@ -431,13 +435,15 @@ public class Main {
         return true;
     }
 
-    public static int[] getLessNearestAmPixel(int x, int y) { //получить координаты пикселя с наименьшим количеством ближайших пикселей (проход по границе)
-        int minAmount = 10, xmin = 0, ymin = 0;
+    public static int[] getLessNearestAmPixel(int x, int y, int prev_x_dif, int prev_y_dif) { //получить координаты пикселя с наименьшим количеством ближайших пикселей (проход по границе)
+        int minAmount = 10, xmin = 0, ymin = 0, max_scalar = -9999999;
         ArrayList<int[]> nearestPointsCoordinates = field[y][x].getNearestPointsCoordinates();
         for(int[] coords: nearestPointsCoordinates) {
             int xe = coords[0];
             int ye = coords[1];
-            if(field[ye][xe].getNearAmount() < minAmount && field[ye][xe].isActive() && field[ye][xe].getNearAmount() <= 7) {
+            int current_scalar = (xe-x)*prev_x_dif + (y-ye)*prev_y_dif;
+            if(field[ye][xe].getNearAmount() < minAmount && field[ye][xe].isActive() && field[ye][xe].getNearAmount() <= 7 && field[y][x].getNearAmount() >= 3 && current_scalar >= max_scalar) {
+                max_scalar = current_scalar;
                 minAmount = field[ye][xe].getNearAmount();
                 xmin = coords[0];
                 ymin = coords[1];
@@ -455,12 +461,12 @@ public class Main {
             ArrayList<Vector> vectors = new ArrayList<>();
             for (int y = 0; y < Y_SIZE; y++) {
                 for (int x = 0; x < X_SIZE; x++) {
-                    if(field[y][x].isActive() && field[y][x].getNearAmount() <= 7) {
+                    if(field[y][x].isActive() && field[y][x].getNearAmount() <= 7 && field[y][x].getNearAmount() >= 3) {
                         int prev_x_dif = 0, prev_y_dif = 0, x_dif=0, y_dif=0;
                         Point current_point = field[y][x];
                         Vector vector = new Vector();
                         vector.setStart_point(current_point);
-                        int[] c = getLessNearestAmPixel(x, y);
+                        int[] c = getLessNearestAmPixel(x, y, 0, 0);
                         if(c[0] == X_SIZE+1 && c[1] == Y_SIZE+1) {
                             current_point.setActive(false);
                             vector.setEnd_point(current_point);
@@ -487,13 +493,13 @@ public class Main {
                                 current_point.setActive(false);
                                 prev_point = current_point;
                                 int[] coords;
-                                if((current_point.getXE() == 0 || current_point.getXE() == X_SIZE-1) && current_point.getNearAmount() == 0) {
-                                    if(!current_point.isActive())
-                                        break;
-                                    coords = new int[]{X_SIZE - 1 - current_point.getXE(), 600 - current_point.getYE()};
-                                }
-                                else
-                                    coords = getLessNearestAmPixel(current_point.getXE(), current_point.getYE()); //needtochange
+//                                if((current_point.getXE() == 0 || current_point.getXE() == X_SIZE-1) && current_point.getNearAmount() == 0) {
+//                                    if(!current_point.isActive())
+//                                        break;
+//                                    coords = new int[]{X_SIZE - 1 - current_point.getXE(), 600 - current_point.getYE()};
+//                                }
+//                                else
+                                coords = getLessNearestAmPixel(current_point.getXE(), current_point.getYE(), x_dif, y_dif); //needtochange
                                 int xe = coords[0];
                                 int ye = coords[1];
                                 if(xe == X_SIZE+1 && ye == Y_SIZE+1) { //если следующая точка - последняя
@@ -513,11 +519,6 @@ public class Main {
                                     break;
                                 }
                                 current_point = field[ye][xe];
-//                                if(current_point.getXE()==x && current_point.getYE() == y) {
-//                                    vector.setEnd_point(current_point);
-//                                    current_point.setActive(false);
-//                                    vectors.add(vector);
-//                                }
                             }
                         }
                         if(vectors.size()>=60) {
@@ -621,7 +622,6 @@ public class Main {
         writer.write("</svg>");
         writer.close();
 
-//        HashMap<Integer, Integer> linesCounters = new HashMap<>();
         for(Line line: lines) {
             ArrayList<Vector> vectors = line.getVectors();
             ArrayList<Integer> numbers = new ArrayList<>();
@@ -649,12 +649,12 @@ public class Main {
 //                    g.drawOval(field[y][x].getXE(), field[y][x].getYE(), 1, 1);
 //                }
 //            }
-            for(Line line: lines) { //блок рисования фрактала через найденные вектора
+            for(Line line: lines) { //блок рисования фрактала через найденные линии
                 for(Vector vector: line.getVectors()) {
-                    if(vector != null)
+                    if(vector != null) {
                         g.setColor(new Color(vector.getEnd_point().getR(), vector.getEnd_point().getG(), vector.getEnd_point().getB()));
-                    assert vector != null;
-                    g.drawLine(vector.getStart_point().getXE(), vector.getStart_point().getYE(), vector.getEnd_point().getXE(), vector.getEnd_point().getYE());
+                        g.drawLine(vector.getStart_point().getXE(), vector.getStart_point().getYE(), vector.getEnd_point().getXE(), vector.getEnd_point().getYE());
+                    }
                 }
             }
         }
