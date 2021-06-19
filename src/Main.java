@@ -421,6 +421,157 @@ public class Main {
         }
     }
 
+    public static void setAmOfWhiteNearestPoints() { //находит ближайшие одинаковые по цвету точки и их количество, для всех точек
+        double diagonal_weight = 0.5;
+        for(int i = 0; i < Y_SIZE; i++) {
+            for(int j = 0; j < X_SIZE; j++) {
+                if(j == 0) { //левый столбец
+                    if(i == 0) { //верхняя ячейка
+                        if (255 == field[i][j+1].getR() && 255 == field[i][j+1].getG() && 255 == field[i][j+1].getB()) {
+                            field[i][j].increaseBorderNearAmount();
+                        }
+                        if (255 == field[i+1][j].getR() && 255 == field[i+1][j].getG() && 255 == field[i+1][j].getB()) {
+                            field[i][j].increaseBorderNearAmount();
+                        }
+                        if (255 == field[i+1][j+1].getR() && 255 == field[i+1][j+1].getG() && 255 == field[i+1][j+1].getB()) {
+                            field[i][j].increaseBorderNearAmount(diagonal_weight);
+                        }
+                    }
+                    else if (i == Y_SIZE-1) { //нижняя ячейка
+                        if (255 == field[i][j+1].getR() && 255 == field[i][j+1].getG() && 255 == field[i][j+1].getB()) {
+                            field[i][j].increaseBorderNearAmount();
+                        }
+                        if (255 == field[i-1][j].getR() && 255 == field[i-1][j].getG() && 255 == field[i-1][j].getB()) {
+                            field[i][j].increaseBorderNearAmount();
+                        }
+                        if (255 == field[i-1][j+1].getR() && 255 == field[i-1][j+1].getG() && 255 == field[i-1][j+1].getB()) {
+                            field[i][j].increaseBorderNearAmount(diagonal_weight);
+                        }
+                    }
+                    else { //остальные ячейки
+                        if (255 == field[i][j+1].getR() && 255 == field[i][j+1].getG() && 255 == field[i][j+1].getB()) {
+                            field[i][j].increaseBorderNearAmount();
+                        }
+                        if (255 == field[i-1][j].getR() && 255 == field[i-1][j].getG() && 255 == field[i-1][j].getB()) {
+                            field[i][j].increaseBorderNearAmount();
+                        }
+                        if (255 == field[i-1][j+1].getR() && 255 == field[i-1][j+1].getG() && 255 == field[i-1][j+1].getB()) {
+                            field[i][j].increaseBorderNearAmount(diagonal_weight);
+                        }
+                        if (255 == field[i+1][j].getR() && 255 == field[i+1][j].getG() && 255 == field[i+1][j].getB()) {
+                            field[i][j].increaseBorderNearAmount();
+                        }
+                        if (255 == field[i+1][j+1].getR() && 255 == field[i+1][j+1].getG() && 255 == field[i+1][j+1].getB()) {
+                            field[i][j].increaseBorderNearAmount(diagonal_weight);
+                        }
+                    }
+                }
+                else if(j == X_SIZE-1) { //правый столбец
+                    if(i == 0) { //верхняя ячейка
+                        if (255 == field[i][j-1].getR() && 255 == field[i][j-1].getG() && 255 == field[i][j-1].getB()) {
+                            field[i][j].increaseBorderNearAmount();
+                        }
+                        if (255 == field[i+1][j].getR() && 255 == field[i+1][j].getG() && 255 == field[i+1][j].getB()) {
+                            field[i][j].increaseBorderNearAmount();
+                        }
+                        if (255 == field[i+1][j-1].getR() && 255 == field[i+1][j-1].getG() && 255 == field[i+1][j-1].getB()) {
+                            field[i][j].increaseBorderNearAmount(diagonal_weight);
+                        }
+                    }
+                    else if (i == Y_SIZE-1) { //нижняя ячейка
+                        if (255 == field[i][j-1].getR() && 255 == field[i][j-1].getG() && 255 == field[i][j-1].getB()) {
+                            field[i][j].increaseBorderNearAmount();
+                        }
+                        if (255 == field[i-1][j].getR() && 255 == field[i-1][j].getG() && 255 == field[i-1][j].getB()) {
+                            field[i][j].increaseBorderNearAmount();
+                        }
+                        if (255 == field[i-1][j-1].getR() && 255 == field[i-1][j-1].getG() && 255 == field[i-1][j-1].getB()) {
+                            field[i][j].increaseBorderNearAmount(diagonal_weight);
+                        }
+                    }
+                    else { //остальные ячейки
+                        if (255 == field[i][j-1].getR() && 255 == field[i][j-1].getG() && 255 == field[i][j-1].getB()) {
+                            field[i][j].increaseBorderNearAmount();
+                        }
+                        if (255 == field[i-1][j].getR() && 255 == field[i-1][j].getG() && 255 == field[i-1][j].getB()) {
+                            field[i][j].increaseBorderNearAmount();
+                        }
+                        if (255 == field[i-1][j-1].getR() && 255 == field[i-1][j-1].getG() && 255 == field[i-1][j-1].getB()) {
+                            field[i][j].increaseBorderNearAmount(diagonal_weight);
+                        }
+                        if (255 == field[i+1][j].getR() && 255 == field[i+1][j].getG() && 255 == field[i+1][j].getB()) {
+                            field[i][j].increaseBorderNearAmount();
+                        }
+                        if (255 == field[i+1][j-1].getR() && 255 == field[i+1][j-1].getG() && 255 == field[i+1][j-1].getB()) {
+                            field[i][j].increaseBorderNearAmount(diagonal_weight);
+                        }
+                    }
+                }
+                else { //любой столбец
+                    if(i == 0) { //верхняя ячейка
+                        if (255 == field[i][j+1].getR() && 255 == field[i][j+1].getG() && 255 == field[i][j+1].getB()) {
+                            field[i][j].increaseBorderNearAmount();
+                        }
+                        if (255 == field[i+1][j].getR() && 255 == field[i+1][j].getG() && 255 == field[i+1][j].getB()) {
+                            field[i][j].increaseBorderNearAmount();
+                        }
+                        if (255 == field[i+1][j+1].getR() && 255 == field[i+1][j+1].getG() && 255 == field[i+1][j+1].getB()) {
+                            field[i][j].increaseBorderNearAmount(diagonal_weight);
+                        }
+                        if (255 == field[i+1][j-1].getR() && 255 == field[i+1][j-1].getG() && 255 == field[i+1][j-1].getB()) {
+                            field[i][j].increaseBorderNearAmount(diagonal_weight);
+                        }
+                        if (255 == field[i][j-1].getR() && 255 == field[i][j-1].getG() && 255 == field[i][j-1].getB()) {
+                            field[i][j].increaseBorderNearAmount();
+                        }
+                    }
+                    else if (i == Y_SIZE-1) { //нижняя ячейка
+                        if (255 == field[i][j+1].getR() && 255 == field[i][j+1].getG() && 255 == field[i][j+1].getB()) {
+                            field[i][j].increaseBorderNearAmount();
+                        }
+                        if (255 == field[i-1][j].getR() && 255 == field[i-1][j].getG() && 255 == field[i-1][j].getB()) {
+                            field[i][j].increaseBorderNearAmount();
+                        }
+                        if (255 == field[i-1][j+1].getR() && 255 == field[i-1][j+1].getG() && 255 == field[i-1][j+1].getB()) {
+                            field[i][j].increaseBorderNearAmount(diagonal_weight);
+                        }
+                        if (255 == field[i-1][j-1].getR() && 255 == field[i-1][j-1].getG() && 255 == field[i-1][j-1].getB()) {
+                            field[i][j].increaseBorderNearAmount(diagonal_weight);
+                        }
+                        if (255 == field[i][j-1].getR() && 255 == field[i][j-1].getG() && 255 == field[i][j-1].getB()) {
+                            field[i][j].increaseBorderNearAmount();
+                        }
+                    }
+                    else { //остальные ячейки
+                        if (255 == field[i][j+1].getR() && 255 == field[i][j+1].getG() && 255 == field[i][j+1].getB()) {
+                            field[i][j].increaseBorderNearAmount();
+                        }
+                        if (255 == field[i-1][j].getR() && 255 == field[i-1][j].getG() && 255 == field[i-1][j].getB()) {
+                            field[i][j].increaseBorderNearAmount();
+                        }
+                        if (255 == field[i-1][j+1].getR() && 255 == field[i-1][j+1].getG() && 255 == field[i-1][j+1].getB()) {
+                            field[i][j].increaseBorderNearAmount(diagonal_weight);
+                        }
+                        if (255 == field[i+1][j].getR() && 255 == field[i+1][j].getG() && 255 == field[i+1][j].getB()) {
+                            field[i][j].increaseBorderNearAmount();
+                        }
+                        if (255 == field[i+1][j+1].getR() && 255 == field[i+1][j+1].getG() && 255 == field[i+1][j+1].getB()) {
+                            field[i][j].increaseBorderNearAmount(diagonal_weight);
+                        }
+                        if (255 == field[i+1][j-1].getR() && 255 == field[i+1][j-1].getG() && 255 == field[i+1][j-1].getB()) {
+                            field[i][j].increaseBorderNearAmount(diagonal_weight);
+                        }
+                        if (255 == field[i-1][j-1].getR() && 255 == field[i-1][j-1].getG() && 255 == field[i-1][j-1].getB()) {
+                            field[i][j].increaseBorderNearAmount(diagonal_weight);
+                        }
+                        if (255 == field[i][j-1].getR() && 255 == field[i][j-1].getG() && 255 == field[i][j-1].getB()) {
+                            field[i][j].increaseBorderNearAmount();
+                        }
+                    }
+                }
+            }
+        }
+    }
     public static void deleteNoisePoints() { //как вариант
 
     }
@@ -436,7 +587,7 @@ public class Main {
     }
 
     public static int[] getLessNearestAmPixel(int x, int y, int prev_x_dif, int prev_y_dif) { //получить координаты пикселя с наименьшим количеством ближайших пикселей (проход по границе)
-        int minAmount = 10, xmin = 0, ymin = 0, max_scalar = -9999999;
+        double minAmount = 10, xmin = 0, ymin = 0, max_scalar = -9999999;
         ArrayList<int[]> nearestPointsCoordinates = field[y][x].getNearestPointsCoordinates();
         for(int[] coords: nearestPointsCoordinates) {
             int xe = coords[0];
@@ -445,15 +596,18 @@ public class Main {
             if(field[ye][xe].getNearAmount() < minAmount && field[ye][xe].isActive() && field[ye][xe].getNearAmount() <= 7 && field[y][x].getNearAmount() >= 3 && current_scalar >= max_scalar) {
                 max_scalar = current_scalar;
                 minAmount = field[ye][xe].getNearAmount();
-                xmin = coords[0];
-                ymin = coords[1];
+                xmin = xe;
+                ymin = ye;
             }
         }
         if(minAmount==10)
             return new int[] {X_SIZE+1, Y_SIZE+1};
         else
-            return new int[] {xmin, ymin};
+            return new int[] {(int)xmin, (int)ymin};
     }
+
+
+
 
     public static void buildLines() { //нахождение ломаных, построение линий
         if(linesAreExisted()) {
@@ -499,7 +653,7 @@ public class Main {
 //                                    coords = new int[]{X_SIZE - 1 - current_point.getXE(), 600 - current_point.getYE()};
 //                                }
 //                                else
-                                coords = getLessNearestAmPixel(current_point.getXE(), current_point.getYE(), x_dif, y_dif); //needtochange
+                                coords = getLessNearestAmPixel(current_point.getXE(), current_point.getYE(), x_dif, y_dif); //needtochange на что?
                                 int xe = coords[0];
                                 int ye = coords[1];
                                 if(xe == X_SIZE+1 && ye == Y_SIZE+1) { //если следующая точка - последняя
@@ -521,7 +675,127 @@ public class Main {
                                 current_point = field[ye][xe];
                             }
                         }
-                        if(vectors.size()>=60) {
+                        if(vectors.size()>=1) {
+                            line.setVectors(vectors);
+                            vectors = new ArrayList<>();
+                            lines.add(line);
+                            line = new Line();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+//    public static int[] getLessPixelByWhite(int x, int y) {
+//        double minAmount = 10, maxBorderAmount = -1;
+//        int xmin=0, ymin=0;
+//        ArrayList<int[]> nearestPointsCoordinates = field[y][x].getNearestPointsCoordinates();
+//        for(int[] coords: nearestPointsCoordinates) {
+//            int xe = coords[0];
+//            int ye = coords[1];
+//            if(field[ye][xe].getNearAmount() < minAmount && field[ye][xe].getBorderNearAmount() > maxBorderAmount && field[ye][xe].isActive() && field[ye][xe].getNearAmount() <= 7 && field[y][x].getNearAmount() >= 3 && field[y][x].getBorderNearAmount() <= 7 && field[y][x].getBorderNearAmount() >= 1) {
+//                if(field[ye][xe].getNearAmount() < minAmount)
+//                    minAmount = field[ye][xe].getNearAmount();
+//                if(maxBorderAmount < field[ye][xe].getBorderNearAmount())
+//                    maxBorderAmount = field[ye][xe].getBorderNearAmount();
+//                xmin = xe;
+//                ymin = ye;
+//            }
+//        }
+//        if(minAmount==10 && maxBorderAmount==-1)
+//            return new int[] {X_SIZE+1, Y_SIZE+1};
+//        else
+//            return new int[] {xmin, ymin};
+//    }
+
+    public static int[] getLessPixelByWhite(int x, int y) {
+        double maxBorderAmount = -1;
+        int xmin=0, ymin=0;
+        ArrayList<int[]> nearestPointsCoordinates = field[y][x].getNearestPointsCoordinates();
+        for(int[] coords: nearestPointsCoordinates) {
+            int xe = coords[0];
+            int ye = coords[1];
+            if(field[ye][xe].getBorderNearAmount() > maxBorderAmount && field[ye][xe].isActive() && field[y][x].getBorderNearAmount() <= 7 && field[y][x].getBorderNearAmount() >= 1) {
+                maxBorderAmount = field[ye][xe].getBorderNearAmount();
+                xmin = xe;
+                ymin = ye;
+            }
+        }
+        if(maxBorderAmount==-1)
+            return new int[] {X_SIZE+1, Y_SIZE+1};
+        else
+            return new int[] {xmin, ymin};
+    }
+    public static void buildLinesByWhite() { //нахождение ломаных, построение линий
+        if(linesAreExisted()) {
+            Line line = new Line();
+            ArrayList<Vector> vectors = new ArrayList<>();
+            for (int y = 0; y < Y_SIZE; y++) {
+                for (int x = 0; x < X_SIZE; x++) {
+                    if(field[y][x].isActive() && field[y][x].getNearAmount() <= 7 && field[y][x].getNearAmount() >= 3 && field[y][x].getBorderNearAmount() <= 7 && field[y][x].getBorderNearAmount() >= 1) {
+                        int prev_x_dif = 0, prev_y_dif = 0, x_dif=0, y_dif=0;
+                        Point current_point = field[y][x];
+                        Vector vector = new Vector();
+                        vector.setStart_point(current_point);
+                        int[] c = getLessPixelByWhite(x, y);
+                        if(c[0] == X_SIZE+1 && c[1] == Y_SIZE+1) {
+                            current_point.setActive(false);
+                            vector.setEnd_point(current_point);
+                            vectors.add(vector);
+                            continue;
+                        }
+                        current_point.setActive(false);
+                        current_point = field[c[1]][c[0]];
+                        prev_x_dif = current_point.getXE() - x;
+                        prev_y_dif = current_point.getYE() - y;
+                        Point prev_point = field[y][x];
+                        while((current_point.getXE()!=x || current_point.getYE() != y) && ((current_point.getXE()!=0 && current_point.getYE() != 0 && current_point.getXE()!=X_SIZE-1 && current_point.getYE() != Y_SIZE-1))) { // || current_point.getNearAmount() != 0)
+                            if(current_point.isActive()) {
+                                x_dif = current_point.getXE() - prev_point.getXE();
+                                y_dif = current_point.getYE() - prev_point.getYE();
+                                if(x_dif!=prev_x_dif || y_dif != prev_y_dif) {
+                                    vector.setEnd_point(prev_point);
+                                    vectors.add(vector);
+                                    vector = new Vector();
+                                    vector.setStart_point(prev_point);
+                                    prev_x_dif = x_dif;
+                                    prev_y_dif = y_dif;
+                                }
+                                current_point.setActive(false);
+                                prev_point = current_point;
+                                int[] coords;
+//                                if((current_point.getXE() == 0 || current_point.getXE() == X_SIZE-1) && current_point.getNearAmount() == 0) {
+//                                    if(!current_point.isActive())
+//                                        break;
+//                                    coords = new int[]{X_SIZE - 1 - current_point.getXE(), 600 - current_point.getYE()};
+//                                }
+//                                else
+                                coords = getLessPixelByWhite(current_point.getXE(), current_point.getYE()); //needtochange
+                                int xe = coords[0];
+                                int ye = coords[1];
+                                if(xe == X_SIZE+1 && ye == Y_SIZE+1) { //если следующая точка - последняя
+                                    if(current_point.getYE()+1 == y && current_point.getXE() == x || current_point.getYE()+1 == y && current_point.getXE()+1 == x //если последняя точка в пути является начальной точкой линии
+                                            || current_point.getYE()+1 == y && current_point.getXE()-1 == x || current_point.getYE() == y && current_point.getXE()+1 == x
+                                            || current_point.getYE() == y && current_point.getXE()-1 == x || current_point.getYE()-1 == y && current_point.getXE() == x
+                                            || current_point.getYE()-1 == y && current_point.getXE()+1 == x || current_point.getYE()-1 == y && current_point.getXE()-1 == x) {
+                                        vector.setEnd_point(field[y][x]);
+                                        current_point.setActive(false);
+                                        vectors.add(vector);
+
+                                    }
+                                    else { //если тупик
+                                        vector.setEnd_point(current_point);
+                                        current_point.setActive(false);
+                                        vectors.add(vector);
+                                    }
+                                    break;
+                                }
+                                current_point = field[ye][xe];
+                            }
+
+                        }
+                        if(vectors.size()>=10) {
                             line.setVectors(vectors);
                             vectors = new ArrayList<>();
                             lines.add(line);
@@ -576,22 +850,23 @@ public class Main {
     public static void main(String[] args) throws IOException {
         //makeTestFieldSquare();
 //        makeTestFieldTriangle();
-        Random rand = new Random();
 //        makeSphericalFractal("mandelbrot", 0, 0, 0, -0.9, 1.2, 0, 0, 0, -0.5, 1); //для сферического фрактала Мандельброта
+        Random rand = new Random();
         makeZhuliaMandelbrot("mandelbrot");
         File file = null;
         FileWriter writer = null;
-        for (int x = 0; x < Y_SIZE; x++) { //вывод в консоль RGB каждой точки
-            for (int y = 0; y < X_SIZE; y++) {
-                System.out.println(field[y][x].getR() + " " + field[y][x].getG() + " " + field[y][x].getB());
-            }
-        }
+//        for (int x = 0; x < Y_SIZE; x++) { //вывод в консоль RGB каждой точки
+//            for (int y = 0; y < X_SIZE; y++) {
+//                System.out.println(field[y][x].getR() + " " + field[y][x].getG() + " " + field[y][x].getB());
+//            }
+//        }
         file = new File(".\\src\\file.svg");
         writer = new FileWriter(file);
         setAmOfNearestPoints();
+        setAmOfWhiteNearestPoints();
         GUI app = new GUI();
         app.setVisible(true);
-        buildLines();
+        buildLinesByWhite();
         writer.write("""
                             <?xml version="1.0" encoding="UTF-8" standalone="no"?>
                             <svg version = "1.1"

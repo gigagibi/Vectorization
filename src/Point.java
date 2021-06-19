@@ -1,9 +1,11 @@
 import java.util.ArrayList;
 
 public class Point {
-    private int XE, YE, R, G, B, zVertical, nearAmount=0;
+    private int XE, YE, R, G, B, zVertical;
+    double nearAmount=0, borderAmount=0;
     private boolean isActive = true;
     private ArrayList<int[]> nearestPointsCoordinates;
+    private ArrayList<int[]> nearestBorderPointsCoordinates;
 
     public Point(int XE, int YE) {
         this.XE = XE;
@@ -38,12 +40,28 @@ public class Point {
         this.YE = YE;
     }
 
-    public int getNearAmount() {
+    public double getNearAmount() {
         return nearAmount;
+    }
+
+    public double getBorderNearAmount() {
+        return borderAmount;
     }
 
     public void increaseNearAmount() {
         this.nearAmount++;
+    }
+
+    public void increaseNearAmount(double a) {
+        this.nearAmount+=a;
+    }
+
+    public void increaseBorderNearAmount() {
+        this.borderAmount++;
+    }
+
+    public void increaseBorderNearAmount(double a) {
+        this.borderAmount+=a;
     }
 
     public boolean isActive() {
