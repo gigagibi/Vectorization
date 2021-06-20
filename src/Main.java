@@ -12,7 +12,7 @@ public class Main {
     private static final double M_PI = 3.1415926535;
     private static final int X_SIZE = 600;
     private static final int Y_SIZE = 600;
-    private static Point[][] field = new Point[Y_SIZE][X_SIZE];
+    private static Point[][] field = new Point[Y_SIZE+1000][X_SIZE+1000];
     private static ArrayList<Line> lines = new ArrayList<>();
 
     public static double sqrt(double value) {
@@ -716,7 +716,7 @@ public class Main {
         for(int[] coords: nearestPointsCoordinates) {
             int xe = coords[0];
             int ye = coords[1];
-            if(field[ye][xe].getBorderNearAmount() > maxBorderAmount && field[ye][xe].isActive() && field[y][x].getBorderNearAmount() <= 7 && field[y][x].getBorderNearAmount() >= 1) {
+            if(field[ye][xe].getBorderNearAmount() > maxBorderAmount && field[ye][xe].isActive() && field[y][x].getBorderNearAmount() <= 6 && field[y][x].getBorderNearAmount() >= 0) {
                 maxBorderAmount = field[ye][xe].getBorderNearAmount();
                 xmin = xe;
                 ymin = ye;
@@ -733,7 +733,7 @@ public class Main {
             ArrayList<Vector> vectors = new ArrayList<>();
             for (int y = 0; y < Y_SIZE; y++) {
                 for (int x = 0; x < X_SIZE; x++) {
-                    if(field[y][x].isActive() && field[y][x].getNearAmount() <= 7 && field[y][x].getNearAmount() >= 3 && field[y][x].getBorderNearAmount() <= 7 && field[y][x].getBorderNearAmount() >= 1) {
+                    if(field[y][x].isActive() && field[y][x].getBorderNearAmount() <= 6 && field[y][x].getBorderNearAmount() >= 0) {
                         int prev_x_dif = 0, prev_y_dif = 0, x_dif=0, y_dif=0;
                         Point current_point = field[y][x];
                         Vector vector = new Vector();
@@ -754,7 +754,7 @@ public class Main {
                             if(current_point.isActive()) {
                                 x_dif = current_point.getXE() - prev_point.getXE();
                                 y_dif = current_point.getYE() - prev_point.getYE();
-                                if(x_dif!=prev_x_dif || y_dif != prev_y_dif) {
+                                if((x_dif!=prev_x_dif || y_dif != prev_y_dif) && x_dif!=0 && y_dif!=0) {
                                     vector.setEnd_point(prev_point);
                                     vectors.add(vector);
                                     vector = new Vector();
@@ -782,18 +782,64 @@ public class Main {
                                         vector.setEnd_point(field[y][x]);
                                         current_point.setActive(false);
                                         vectors.add(vector);
-
+                                        break;
                                     }
                                     else { //если тупик
+//                                        vector.setEnd_point(current_point);
+//                                        current_point.setActive(false);
+//                                        vectors.add(vector);
+//                                        Point end_point = current_point;
+//                                        current_point = vector.getStart_point();
+//                                        vector = new Vector();
+//                                        vector.setStart_point(end_point);
+//                                        vector.setEnd_point(current_point);
+//                                        vectors.add(vector);
+//                                        current_point.setActive(true);
+//                                        prev_point=current_point;
                                         vector.setEnd_point(current_point);
                                         current_point.setActive(false);
                                         vectors.add(vector);
+                                        Point startPoint = current_point;
+                                        vector = new Vector();
+                                        vector.setStart_point(startPoint);
+                                        boolean isFound = false;
+                                        int radiusForFound = 1;
+                                        while(!isFound) {
+                                            int xc = 0;
+                                            int yc = 0;
+                                            radiusForFound++;
+                                            for(int xd = -1; xd <=1; xd++) {
+                                                for(int yd = -1; yd <=1; yd++) {
+                                                    if((xd !=0 || yd!=0)) {
+                                                        xc = startPoint.getXE() + radiusForFound * xd;
+                                                        yc = startPoint.getYE() + radiusForFound * yd;
+                                                        if(xc == 0 || yc == 0 || xc == 600 || yc == 600) {
+                                                            System.out.println("error");
+                                                        }
+                                                        if(field[yc][xc]!=null) {
+                                                            if(field[yc][xc].getBorderNearAmount() <= 7 && field[yc][xc].getBorderNearAmount() >= 1) {
+                                                                current_point = field[yc][xc];
+                                                                vector.setEnd_point(current_point);
+                                                                vectors.add(vector);
+                                                                vector = new Vector();
+                                                                vector.setStart_point(current_point);
+                                                                isFound=true;
+                                                                prev_point=current_point;
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                if(isFound)
+                                                    break;
+                                            }
+                                        }
                                     }
-                                    break;
                                 }
-                                current_point = field[ye][xe];
+                                else { //если есть куда идти
+                                    current_point = field[ye][xe];
+                                }
                             }
-
                         }
                         if(vectors.size()>=10) {
                             line.setVectors(vectors);
