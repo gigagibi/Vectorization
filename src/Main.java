@@ -675,7 +675,7 @@ public class Main {
                                 current_point = field[ye][xe];
                             }
                         }
-                        if(vectors.size()>=1) {
+                        if(vectors.size()>=10) {
                             line.setVectors(vectors);
                             vectors = new ArrayList<>();
                             lines.add(line);
@@ -716,7 +716,7 @@ public class Main {
         for(int[] coords: nearestPointsCoordinates) {
             int xe = coords[0];
             int ye = coords[1];
-            if(field[ye][xe].getBorderNearAmount() > maxBorderAmount && field[ye][xe].isActive() && field[y][x].getBorderNearAmount() <= 7 && field[y][x].getBorderNearAmount() >= 1) {
+            if(field[ye][xe].getBorderNearAmount() > maxBorderAmount && field[ye][xe].isActive() && field[y][x].getBorderNearAmount() <= 4.5 && field[y][x].getBorderNearAmount() >= 0.5) {
                 maxBorderAmount = field[ye][xe].getBorderNearAmount();
                 xmin = xe;
                 ymin = ye;
@@ -733,7 +733,7 @@ public class Main {
             ArrayList<Vector> vectors = new ArrayList<>();
             for (int y = 0; y < Y_SIZE; y++) {
                 for (int x = 0; x < X_SIZE; x++) {
-                    if(field[y][x].isActive() && field[y][x].getNearAmount() <= 7 && field[y][x].getNearAmount() >= 3 && field[y][x].getBorderNearAmount() <= 7 && field[y][x].getBorderNearAmount() >= 1) {
+                    if(field[y][x].isActive() && field[y][x].getBorderNearAmount() <= 4.5 && field[y][x].getBorderNearAmount() >= 0.5) {
                         int prev_x_dif = 0, prev_y_dif = 0, x_dif=0, y_dif=0;
                         Point current_point = field[y][x];
                         Vector vector = new Vector();
@@ -795,7 +795,7 @@ public class Main {
                             }
 
                         }
-                        if(vectors.size()>=10) {
+                        if(vectors.size()>=1) {
                             line.setVectors(vectors);
                             vectors = new ArrayList<>();
                             lines.add(line);
