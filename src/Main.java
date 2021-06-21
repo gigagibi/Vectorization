@@ -38,7 +38,7 @@ public class Main {
                 else
                 if(fractalName.toLowerCase().equals("zhulia")) {
                     z = new Complex(x, y);
-                    c = new Complex(0.28, 0.0113);
+                    c = new Complex(0.1, 0.45);
                 }
                 int iter = 0;
                 while(true) {
@@ -85,10 +85,10 @@ public class Main {
 //
 //                else if (iter % 17 == 10)
 //                    field[YE][XE].setRGB(255, 255, 255);
-
+//
 //                else if (iter % 17 == 9)
 //                    field[YE][XE].setRGB(48, 230, 200);
-
+//
 //                else if (iter % 17 == 8)
 //                    field[YE][XE].setRGB(255, 165, 0);
 //
@@ -617,11 +617,13 @@ public class Main {
 
     public static void buildLines() { //нахождение ломаных, построение линий
         if(linesAreExisted()) {
-            Line line = new Line();
-            ArrayList<Vector> vectors = new ArrayList<>();
+            Line line = null;
+            ArrayList<Vector> vectors = null;
             for (int y = 0; y < Y_SIZE; y++) {
                 for (int x = 0; x < X_SIZE; x++) {
                     if(field[y][x].isActive() && field[y][x].getNearAmount() <= 7 && field[y][x].getNearAmount() >= 3) {
+                        line = new Line();
+                        vectors = new ArrayList<>();
                         int prev_x_dif = 0, prev_y_dif = 0, x_dif=0, y_dif=0;
                         Point current_point = field[y][x];
                         Vector vector = new Vector();
@@ -683,9 +685,7 @@ public class Main {
                         }
                         if(vectors.size()>=10) {
                             line.setVectors(vectors);
-                            vectors = new ArrayList<>();
                             lines.add(line);
-                            line = new Line();
                         }
                     }
                 }
@@ -722,7 +722,7 @@ public class Main {
         for(int[] coords: nearestPointsCoordinates) {
             int xe = coords[0];
             int ye = coords[1];
-            if(field[ye][xe].getBorderNearAmount() > maxBorderAmount && field[ye][xe].isActive() && field[ye][xe].getBorderNearAmount() <= 4.5 && field[ye][xe].getBorderNearAmount() >= 0.5 ) {
+            if(field[ye][xe].getBorderNearAmount() > maxBorderAmount && field[ye][xe].isActive() && field[ye][xe].getBorderNearAmount() <= 4.5 && field[ye][xe].getBorderNearAmount() >= 0.5 && field[ye][xe].getNearAmount() > 2) {
                 maxBorderAmount = field[ye][xe].getBorderNearAmount();
                 xmin = xe;
                 ymin = ye;
@@ -739,7 +739,7 @@ public class Main {
             ArrayList<Vector> vectors = new ArrayList<>();
             for (int y = 0; y < Y_SIZE; y++) {
                 for (int x = 0; x < X_SIZE; x++) {
-                    if(field[y][x].isActive() && field[y][x].getBorderNearAmount() <= 4.5 && field[y][x].getBorderNearAmount() >= 0.5) {
+                    if(field[y][x].isActive() && field[y][x].getBorderNearAmount() <= 4.5 && field[y][x].getBorderNearAmount() >= 0.5 && field[y][x].getNearAmount() > 2) {
                         int prev_x_dif = 0, prev_y_dif = 0, x_dif=0, y_dif=0;
                         Point current_point = field[y][x];
                         Vector vector = new Vector();
@@ -771,12 +771,6 @@ public class Main {
                                 current_point.setActive(false);
                                 prev_point = current_point;
                                 int[] coords;
-//                                if((current_point.getXE() == 0 || current_point.getXE() == X_SIZE-1) && current_point.getNearAmount() == 0) {
-//                                    if(!current_point.isActive())
-//                                        break;
-//                                    coords = new int[]{X_SIZE - 1 - current_point.getXE(), 600 - current_point.getYE()};
-//                                }
-//                                else
                                 coords = getLessPixelByWhite(current_point.getXE(), current_point.getYE()); //needtochange
                                 int xe = coords[0];
                                 int ye = coords[1];
@@ -854,26 +848,9 @@ public class Main {
         }
     }
 
-    public static void main(String[] args) throws IOException {
-        //makeTestFieldSquare();
-//        makeTestFieldTriangle();
-//        makeSphericalFractal("mandelbrot", 0, 0, 0, -0.9, 1.2, 0, 0, 0, -0.5, 1); //для сферического фрактала Мандельброта
-        Random rand = new Random();
-        makeZhuliaMandelbrot("mandelbrot");
-        File file = null;
-        FileWriter writer = null;
-//        for (int x = 0; x < Y_SIZE; x++) { //вывод в консоль RGB каждой точки
-//            for (int y = 0; y < X_SIZE; y++) {
-//                System.out.println(field[y][x].getR() + " " + field[y][x].getG() + " " + field[y][x].getB());
-//            }
-//        }
-        file = new File(".\\src\\file.svg");
-        writer = new FileWriter(file);
-        setAmOfNearestPoints();
-        setAmOfWhiteNearestPoints();
-        GUI app = new GUI();
-        app.setVisible(true);
-        buildLinesByWhite();
+    public static void writeSVG(String fileName) throws IOException {
+        File file = new File(".\\src\\svg\\" + fileName +  ".svg");
+        FileWriter writer = new FileWriter(file);
         writer.write("""
                             <?xml version="1.0" encoding="UTF-8" standalone="no"?>
                             <svg version = "1.1"
@@ -903,34 +880,38 @@ public class Main {
         }
         writer.write("</svg>");
         writer.close();
+    }
 
-//        for(Line line: lines) {
-//            ArrayList<Vector> vectors = line.getVectors();
-//            ArrayList<Integer> numbers = new ArrayList<>();
-//            file = new File(".\\src\\lines\\h_" + vectors.get(0).getStart_point().getzVertical() + ".txt");
-//            while (file.exists())
-//                file = new File(".\\src\\lines\\h_" + vectors.get(0).getStart_point().getzVertical() + "_" + rand.nextInt(200000) + ".txt");
-//            writer = new FileWriter(file);
-//            for (Vector vector : vectors) {
-//                if (vector != null) {
-//                    System.out.println(vector.getStart_point() + " " + vector.getEnd_point());
-//                    writer.write(vector.getStart_point().getXE() + " " + vector.getStart_point().getYE() + " " + vector.getStart_point().getzVertical() + "\n");
-//                }
-//            }
-//            writer.close();
-//        }
-        file = new File(".\\src\\lines\\h.txt");
-        writer = new FileWriter(file);
+    public static void writeTXT(String fractalName) throws IOException {
         for(Line line: lines) {
             ArrayList<Vector> vectors = line.getVectors();
+            int counter = 0;
+            new File(".\\src\\lines\\" + fractalName).mkdir();
+            File file = new File(".\\src\\lines\\" + fractalName + "\\h_" + vectors.get(0).getStart_point().getzVertical() + ".txt");
+            while (file.exists()) {
+                counter++;
+                file = new File(".\\src\\lines\\" + fractalName + "\\h_" + vectors.get(0).getStart_point().getzVertical() + "_" + counter + ".txt");
+            }
+
+            FileWriter writer = new FileWriter(file);
             for (Vector vector : vectors) {
                 if (vector != null) {
                     System.out.println(vector.getStart_point() + " " + vector.getEnd_point());
-                    writer.write(vector.getStart_point().getXE() + " " + vector.getStart_point().getYE() + " " + vector.getStart_point().getzVertical() + "\n");
+                    writer.write((vector.getStart_point().getXE()-300) + " " + (300-vector.getStart_point().getYE()) + " " + vector.getStart_point().getzVertical() + "\n");
                 }
             }
+            writer.close();
         }
-        writer.close();
+    }
+    public static void main(String[] args) throws IOException {
+//        makeSphericalFractal("mandelbrot", -0.8, 0.5, -1.2, 1.3, 1.3, 0.4, -0.987, 0.07, 0.547, 1.64213); //для сферического фрактала Жулиа-Мандельброта или Нова
+        makeZhuliaMandelbrot("zhulia");
+//        setAmOfNearestPoints();
+//        setAmOfWhiteNearestPoints();
+        GUI app = new GUI();
+//        buildLinesByWhite();
+//        writeSVG("zhulia");
+//        writeTXT("zhulia");
     }
 
 
@@ -957,13 +938,13 @@ public class Main {
 
     static class GUI extends JFrame {
         GraphicsPanel panel  = new GraphicsPanel();
-
         public GUI () {
             super("fractal");
             this.setVisible(true);
             this.setBounds(100, 100, 600, 600);
             this.add(panel);
             this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+            this.setVisible(true);
         }
     }
 }
