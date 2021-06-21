@@ -115,6 +115,8 @@ public class Main {
         for(int x = 0; x < X_SIZE; x++) {
             for(int y = 0; y < X_SIZE; y++) {
                 field[y][x] = new Point(x, y);
+                field[y][x].setActive(false);
+                field[y][x].setRGB(255, 255, 255);
             }
         }
         int iter = 0;
@@ -170,62 +172,66 @@ public class Main {
                 }
                 int YE = (int) ((3+ye)*100);
                 int XE = (int) ((3+xe)*100);
-                if (iter == 100)
+                if (iter == 100) {
                     field[YE][XE].setRGB(0, 0, 0);
-                else if (iter % 17 == 3)
-                    field[YE][XE].setRGB(230, 230, 250);
-
-                else if (iter % 17 == 2)
-                    field[YE][XE].setRGB(255, 99, 71);
-
-                else if (iter % 17 == 1)
-                    field[YE][XE].setRGB(195, 176, 145);
-
-                else if (iter % 17 == 0)
-                    field[YE][XE].setRGB(255, 255, 255);
-
-                else if (iter % 17 == 16)
-                    field[YE][XE].setRGB(100, 149, 237);
-
-                else if (iter % 17 == 15)
-                    field[YE][XE].setRGB(154, 205, 50);
-
-                else if (iter % 17 == 14)
-                    field[YE][XE].setRGB(245, 222, 179);
-
-                else if (iter % 17 == 13)
-                    field[YE][XE].setRGB(211, 211, 211);
-
-                else if (iter % 17 == 12)
-                    field[YE][XE].setRGB(135, 206, 250);
-
-                else if (iter % 17 == 11)
-                    field[YE][XE].setRGB(46, 139, 87);
-
-                else if (iter % 17 == 10)
-                    field[YE][XE].setRGB(255, 255, 255);
-
-                else if (iter % 17 == 9)
-                    field[YE][XE].setRGB(48, 230, 200);
-
-                else if (iter % 17 == 8)
-                    field[YE][XE].setRGB(255, 165, 0);
-
-                else if (iter % 17 == 7)
-                    field[YE][XE].setRGB(128, 0, 128);
-
-                else if (iter % 17 == 6)
-                    field[YE][XE].setRGB(231, 254, 255);
-
-                else if (iter % 17 == 5)
-                    field[YE][XE].setRGB(255, 0, 0);
-
-                else if (iter % 17 == 4)
-                    field[YE][XE].setRGB(173, 216, 230);
-                if (iter != 100)
-                    field[YE][XE].setzVertical(iter % 17);
-                else
                     field[YE][XE].setzVertical(iter);
+                    field[YE][XE].setActive(true);
+                }
+
+//                else if (iter % 17 == 3)
+//                    field[YE][XE].setRGB(230, 230, 250);
+//
+//                else if (iter % 17 == 2)
+//                    field[YE][XE].setRGB(255, 99, 71);
+//
+//                else if (iter % 17 == 1)
+//                    field[YE][XE].setRGB(195, 176, 145);
+//
+//                else if (iter % 17 == 0)
+//                    field[YE][XE].setRGB(255, 255, 255);
+//
+//                else if (iter % 17 == 16)
+//                    field[YE][XE].setRGB(100, 149, 237);
+//
+//                else if (iter % 17 == 15)
+//                    field[YE][XE].setRGB(154, 205, 50);
+//
+//                else if (iter % 17 == 14)
+//                    field[YE][XE].setRGB(245, 222, 179);
+//
+//                else if (iter % 17 == 13)
+//                    field[YE][XE].setRGB(211, 211, 211);
+//
+//                else if (iter % 17 == 12)
+//                    field[YE][XE].setRGB(135, 206, 250);
+//
+//                else if (iter % 17 == 11)
+//                    field[YE][XE].setRGB(46, 139, 87);
+//
+//                else if (iter % 17 == 10)
+//                    field[YE][XE].setRGB(255, 255, 255);
+//
+//                else if (iter % 17 == 9)
+//                    field[YE][XE].setRGB(48, 230, 200);
+//
+//                else if (iter % 17 == 8)
+//                    field[YE][XE].setRGB(255, 165, 0);
+//
+//                else if (iter % 17 == 7)
+//                    field[YE][XE].setRGB(128, 0, 128);
+//
+//                else if (iter % 17 == 6)
+//                    field[YE][XE].setRGB(231, 254, 255);
+//
+//                else if (iter % 17 == 5)
+//                    field[YE][XE].setRGB(255, 0, 0);
+//
+//                else if (iter % 17 == 4)
+//                    field[YE][XE].setRGB(173, 216, 230);
+//                if (iter != 100)
+//                    field[YE][XE].setzVertical(iter % 17);
+//                else
+//                    field[YE][XE].setzVertical(iter);
             }
         }
     }
@@ -716,7 +722,7 @@ public class Main {
         for(int[] coords: nearestPointsCoordinates) {
             int xe = coords[0];
             int ye = coords[1];
-            if(field[ye][xe].getBorderNearAmount() > maxBorderAmount && field[ye][xe].isActive() && field[y][x].getBorderNearAmount() <= 4.5 && field[y][x].getBorderNearAmount() >= 0.5) {
+            if(field[ye][xe].getBorderNearAmount() > maxBorderAmount && field[ye][xe].isActive() && field[ye][xe].getBorderNearAmount() <= 4.5 && field[ye][xe].getBorderNearAmount() >= 0.5 ) {
                 maxBorderAmount = field[ye][xe].getBorderNearAmount();
                 xmin = xe;
                 ymin = ye;
@@ -782,7 +788,6 @@ public class Main {
                                         vector.setEnd_point(field[y][x]);
                                         current_point.setActive(false);
                                         vectors.add(vector);
-
                                     }
                                     else { //если тупик
                                         vector.setEnd_point(current_point);
@@ -792,8 +797,10 @@ public class Main {
                                     break;
                                 }
                                 current_point = field[ye][xe];
+                                if(current_point.getXE() == 279 && current_point.getYE()==220){
+                                    System.out.println("наша точка");
+                                }
                             }
-
                         }
                         if(vectors.size()>=1) {
                             line.setVectors(vectors);
@@ -897,22 +904,35 @@ public class Main {
         writer.write("</svg>");
         writer.close();
 
+//        for(Line line: lines) {
+//            ArrayList<Vector> vectors = line.getVectors();
+//            ArrayList<Integer> numbers = new ArrayList<>();
+//            file = new File(".\\src\\lines\\h_" + vectors.get(0).getStart_point().getzVertical() + ".txt");
+//            while (file.exists())
+//                file = new File(".\\src\\lines\\h_" + vectors.get(0).getStart_point().getzVertical() + "_" + rand.nextInt(200000) + ".txt");
+//            writer = new FileWriter(file);
+//            for (Vector vector : vectors) {
+//                if (vector != null) {
+//                    System.out.println(vector.getStart_point() + " " + vector.getEnd_point());
+//                    writer.write(vector.getStart_point().getXE() + " " + vector.getStart_point().getYE() + " " + vector.getStart_point().getzVertical() + "\n");
+//                }
+//            }
+//            writer.close();
+//        }
+        file = new File(".\\src\\lines\\h.txt");
+        writer = new FileWriter(file);
         for(Line line: lines) {
             ArrayList<Vector> vectors = line.getVectors();
-            ArrayList<Integer> numbers = new ArrayList<>();
-            file = new File(".\\src\\lines\\h_" + vectors.get(0).getStart_point().getzVertical() + ".txt");
-            while (file.exists())
-                file = new File(".\\src\\lines\\h_" + vectors.get(0).getStart_point().getzVertical() + "_" + rand.nextInt(200000) + ".txt");
-            writer = new FileWriter(file);
             for (Vector vector : vectors) {
                 if (vector != null) {
                     System.out.println(vector.getStart_point() + " " + vector.getEnd_point());
                     writer.write(vector.getStart_point().getXE() + " " + vector.getStart_point().getYE() + " " + vector.getStart_point().getzVertical() + "\n");
                 }
             }
-            writer.close();
         }
+        writer.close();
     }
+
 
     static class GraphicsPanel extends JPanel {
         @Override
