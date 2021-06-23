@@ -53,6 +53,13 @@ public class Main {
                     field[YE][XE].setzVertical(iter % 17);
                 }
 
+//                if (iter % 17 == 4) {
+//                    field[YE][XE].setRGB(173, 216, 230);
+//                    field[YE][XE].setActive(true);
+//                    field[YE][XE].setzVertical(iter % 17);
+//                }
+//                Color color = new Color(173, 216, 230);
+
 //                else if (iter % 17 == 3)
 //                    field[YE][XE].setRGB(230, 230, 250);
 //
@@ -71,13 +78,13 @@ public class Main {
 //                else if (iter % 17 == 15)
 //                    field[YE][XE].setRGB(154, 205, 50);
 //
-//                else if (iter % 17 == 14)
+//                else if (iter % 17 == 14)//checked
 //                    field[YE][XE].setRGB(245, 222, 179);
 //
 //                else if (iter % 17 == 13)
 //                    field[YE][XE].setRGB(211, 211, 211);
 //
-//                else if (iter % 17 == 12)
+//                else if (iter % 17 == 12)//checked
 //                    field[YE][XE].setRGB(135, 206, 250);
 //
 //                else if (iter % 17 == 11)
@@ -882,15 +889,15 @@ public class Main {
         writer.close();
     }
 
-    public static void writeTXT(String fractalName) throws IOException {
+    public static void writeTXT(String directoryName) throws IOException {
         for(Line line: lines) {
             ArrayList<Vector> vectors = line.getVectors();
             int counter = 0;
-            new File(".\\src\\lines\\" + fractalName).mkdir();
-            File file = new File(".\\src\\lines\\" + fractalName + "\\h_" + vectors.get(0).getStart_point().getzVertical() + ".txt");
+            new File(".\\src\\lines\\" + directoryName).mkdir();
+            File file = new File(".\\src\\lines\\" + directoryName + "\\h_" + vectors.get(0).getStart_point().getzVertical() + ".txt");
             while (file.exists()) {
                 counter++;
-                file = new File(".\\src\\lines\\" + fractalName + "\\h_" + vectors.get(0).getStart_point().getzVertical() + "_" + counter + ".txt");
+                file = new File(".\\src\\lines\\" + directoryName + "\\h_" + vectors.get(0).getStart_point().getzVertical() + "_" + counter + ".txt");
             }
 
             FileWriter writer = new FileWriter(file);
@@ -905,13 +912,13 @@ public class Main {
     }
     public static void main(String[] args) throws IOException {
 //        makeSphericalFractal("mandelbrot", -0.8, 0.5, -1.2, 1.3, 1.3, 0.4, -0.987, 0.07, 0.547, 1.64213); //для сферического фрактала Жулиа-Мандельброта или Нова
-        makeZhuliaMandelbrot("zhulia");
+        makeZhuliaMandelbrot("mandelbrot");
 //        setAmOfNearestPoints();
 //        setAmOfWhiteNearestPoints();
         GUI app = new GUI();
 //        buildLinesByWhite();
-//        writeSVG("zhulia");
-//        writeTXT("zhulia");
+//        writeSVG("mandelbrot");
+//        writeTXT("mandelbrot");
     }
 
 
